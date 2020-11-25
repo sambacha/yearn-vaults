@@ -35,5 +35,6 @@ def test_zero_limit(chain, gov, vault, token, TestStrategy):
     vault.deposit(5000, {"from": gov})
 
     assert token.balanceOf(strategy) == 0
+    chain.sleep(1)  # Reverts if no delta time
     strategy.harvest({"from": gov})
     assert token.balanceOf(strategy) == 1000

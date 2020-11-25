@@ -2,9 +2,10 @@ import brownie
 
 
 def test_good_migration(
-    token, strategy, vault, gov, strategist, guardian, TestStrategy, rando
+    chain, token, strategy, vault, gov, strategist, guardian, TestStrategy, rando
 ):
     # Call this once to seed the strategy with debt
+    chain.sleep(1)  # Reverts if no delta time
     strategy.harvest({"from": strategist})
 
     strategy_debt = vault.strategies(strategy).dict()["totalDebt"]
