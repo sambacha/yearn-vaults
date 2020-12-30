@@ -905,7 +905,11 @@ def maxAvailableShares() -> uint256:
 
 
 @external
-def withdraw(_shares: uint256 = MAX_UINT256, recipient: address = msg.sender) -> uint256:
+def withdraw(
+    maxShares: uint256 = MAX_UINT256,
+    recipient: address = msg.sender,
+    maxLoss: uint256 = 0,  # BPS
+) -> uint256:
     """
     @notice
         Withdraws the calling account's tokens from this Vault, redeeming
@@ -935,13 +939,16 @@ def withdraw(_shares: uint256 = MAX_UINT256, recipient: address = msg.sender) ->
         entitled to, if the Vault's estimated value were otherwise measured
         through external means, accounting for whatever exceptional scenarios
         exist for the Vault (that aren't covered by the Vault's own design.)
-    @param _shares How many shares to redeem for tokens, defaults to all.
+    @param maxShares
+        How many shares to try and redeem for tokens, defaults to all.
     @param recipient
         The address to issue the shares in this Vault to. Defaults to the
         caller's address.
-    @return The quantity of tokens redeemable for `_shares`.
+    @param maxLoss
+        The maximum acceptable loss to sustain on withdrawal. Defaults to 0%.
+    @return The quantity of tokens redeemed for `_shares`.
     """
-    shares: uint256 = _shares  # May reduce this number below
+    shares: uint256 = maxShares  # May reduce this number below
 
     # If _shares not specified, transfer full share balance
     if shares == MAX_UINT256:
@@ -955,8 +962,14 @@ def withdraw(_shares: uint256 = MAX_UINT256, recipient: address = msg.sender) ->
 
     if value > self.token.balanceOf(self):
         # We need to go get some from our strategies in the withdrawal queue
-        # NOTE: This performs forced withdrawals from each Strategy. There is
-        #       a 0.5% withdrawal fee assessed on each forced withdrawal (<= 0.5% total)
+        # NOTE: This performs forced withdrawals from each Strategy. During
+        #       forced withdrawal, a Strategy may realize a loss. That loss
+        #       is reported back to the Vault, and the will affect the amount
+        #       of tokens that the withdrawer receives for their shares. They
+        #       can optionally specify the maximum acceptable loss (in BPS)
+        #       to prevent excessive losses on their withdrawals (which may
+        #       happen in certain edge cases where Strategies realize a loss)
+        totalLoss: uint256 = 0
         for strategy in self.withdrawalQueue:
             if strategy == ZERO_ADDRESS:
                 break  # We've exhausted the queue
@@ -984,6 +997,11 @@ def withdraw(_shares: uint256 = MAX_UINT256, recipient: address = msg.sender) ->
             # NOTE: This doesn't add to returns as it's not earned by "normal means"
             self.strategies[strategy].totalDebt -= withdrawn + loss
             self.totalDebt -= withdrawn + loss
+            totalLoss += loss
+
+        # NOTE: This loss protection is put in place to revert if losses from
+        #       withdrawing are more than what is considered acceptable.
+        assert totalLoss <= maxLoss * value / MAX_BPS
 
     # NOTE: We have withdrawn everything possible out of the withdrawal queue
     #       but we still don't have enough to fully pay them back, so adjust
