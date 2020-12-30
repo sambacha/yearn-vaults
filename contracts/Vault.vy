@@ -1058,6 +1058,7 @@ def addStrategy(
         The fee the strategist will receive based on this Vault's performance.
     """
     assert strategy != ZERO_ADDRESS
+    assert not self.emergencyShutdown
 
     assert msg.sender == self.governance
     assert self.strategies[strategy].activation == 0
