@@ -1,0 +1,525 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>@yearnvaults/contracts</title>
+	<meta name="description" content="Documentation for @yearnvaults/contracts">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">@yearnvaults/contracts</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1>@yearnvaults/contracts</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#yearn-vault-contracts" id="yearn-vault-contracts" style="color: inherit; text-decoration: none;">
+					<h1>Yearn Vault Contracts</h1>
+				</a>
+				<p>Please read and be familiar with the <a href="SPECIFICATION.md">Specification</a>.</p>
+				<p>This repository is the set of smart contracts that are used for the Yearn Vaults.
+					It contains the requirements, code, deployment scripts, and tests necessary for the
+					core protocol, including a inheritable template strategy for use with Solidity-based
+					strategies that interact with Yearn Vaults. These contracts are used to create a simple
+					way to generate high risk-adjusted returns for depositors of various assets via best-
+					in-class lending protocols, liquidity pools, and community-made yield farming strategies
+				on Ethereum.</p>
+				<a href="#requirements" id="requirements" style="color: inherit; text-decoration: none;">
+					<h3>Requirements</h3>
+				</a>
+				<p>To run the project you need:</p>
+				<ul>
+					<li>Python 3.8 local development environment and Node.js 10.x development environment for Ganache.</li>
+					<li>Brownie local environment setup. See instructions for how to install it
+					<a href="https://eth-brownie.readthedocs.io/en/stable/install.html">here</a>.</li>
+					<li>Local env variables for <a href="https://etherscan.io/apis">Etherscan API</a> and
+					<a href="https://infura.io/">Infura</a> (<code>ETHERSCAN_TOKEN</code>, <code>WEB3_INFURA_PROJECT_ID</code>).</li>
+					<li>Local Ganache environment installed with <code>npm install -g ganache-cli@6.12.1</code>.</li>
+				</ul>
+				<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
+					<h3>Installation</h3>
+				</a>
+				<p>To use the tools that this project provides, please pull the repository from GitHub
+					and install its dependencies as follows.
+					You will need <a href="https://yarnpkg.com/lang/en/docs/install/">yarn</a> installed.
+				It is recommended to use a Python virtual environment.</p>
+				<pre><code class="language-bash">git <span class="hljs-built_in">clone</span> https://github.com/iearn-finance/yearn-vaults
+<span class="hljs-built_in">cd</span> yearn-vaults
+yarn install --lock-file</code></pre>
+				<p>Compile the Smart Contracts:</p>
+				<pre><code class="language-bash">brownie compile <span class="hljs-comment"># add `--size` to see contract compiled sizes</span></code></pre>
+				<a href="#extended-instructions" id="extended-instructions" style="color: inherit; text-decoration: none;">
+					<h4>Extended Instructions</h4>
+				</a>
+				<p>The below guide covers installation on Mac, Linux, Windows, and Windows using the Windows Subsystem for Linux.</p>
+				<p>Any command <code>in code blocks</code> is meant to be executed from a Mac/Linux terminal or Windows command prompt.</p>
+				<ol start="0">
+					<li><em>Note for Windows users:</em> if you want to use the Windows Subsystem for Linux (WSL), go ahead and <a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">install it now</a><ul>
+							<li>After it&#39;s installed, launch your chosen Linux subsystem</li>
+							<li>Follow the Linux instructions below from within your terminal, except for VSCode. Any VSCode installation happens in Windows, not the Linux subsystem.</li>
+						</ul>
+					</li>
+					<li>Install <a href="https://code.visualstudio.com/docs/setup/setup-overview">VSCode</a></li>
+					<li>Install VSCode Extensions<ul>
+							<li><a href="https://marketplace.visualstudio.com/items?itemName=JuanBlanco.solidity">Solidity</a></li>
+							<li><a href="https://marketplace.visualstudio.com/items?itemName=ms-python.python">Python</a></li>
+							<li><a href="https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-vyper">Vyper</a></li>
+							<li>If you&#39;re using the WSL<ul>
+									<li>Wait to install Solidity &amp; Vyper, you&#39;ll do this in a later step</li>
+									<li>Install <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl">Remote - WSL</a></li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<li>Install <a href="https://www.python.org/downloads/release/python-380/">Python 3.8</a><ul>
+							<li>Linux: Refer to your distro documentation</li>
+							<li><a href="https://www.python.org/ftp/python/3.8.0/python-3.8.0-macosx10.9.pkg">Mac installer</a></li>
+							<li><a href="https://www.python.org/ftp/python/3.8.0/python-3.8.0-amd64.exe">Windows installer</a></li>
+						</ul>
+					</li>
+					<li><a href="https://github.com/eth-brownie/brownie">Setup Brownie</a><ul>
+							<li><code>python3 -m pip install --user pipx</code><ul>
+									<li>Note, if get you an error to the effect of python3 not being installed or recognized, run <code>python --version</code>, if it returns back something like <code>Python 3.8.x</code> then just replace <code>python3</code> with <code>python</code> for all python commands in these instructions</li>
+								</ul>
+							</li>
+							<li><code>python3 -m pipx ensurepath</code></li>
+							<li><code>pipx install eth-brownie</code><ul>
+									<li>If you&#39;re on Windows (pure Windows, not WSL), you&#39;ll need to install the <a href="https://visualstudio.microsoft.com/visual-cpp-build-tools/">C++ Build Tools</a> before executing this</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<li>Install Node.js 10.x<ul>
+							<li>Linux or Mac: via your <a href="https://nodejs.org/en/download/package-manager/">package manager</a></li>
+							<li>Windows: <a href="https://nodejs.org/dist/latest-v12.x/node-v12.13.0-x64.msi">x64 installer</a></li>
+							<li>Other <a href="https://nodejs.org/dist/latest-v12.x">10.x downloads</a></li>
+						</ul>
+					</li>
+					<li>Install <a href="https://github.com/trufflesuite/ganache-cli">Ganache</a><ul>
+							<li><code>npm install -g ganache-cli@6.12.1</code></li>
+						</ul>
+					</li>
+					<li><a href="https://classic.yarnpkg.com/en/docs/install">Install Yarn</a></li>
+					<li><a href="https://pypi.org/project/black/">Install Black</a><ul>
+							<li><code>python3 -m pip install black</code></li>
+						</ul>
+					</li>
+					<li>Setup an account on <a href="https://etherscan.io">Etherscan</a> and create an API key<ul>
+							<li>Set <code>ETHERSCAN_TOKEN</code> environment variable to this key&#39;s value<ul>
+									<li>Windows: <code>setx ETHERSCAN_TOKEN yourtokenvalue</code></li>
+									<li>Mac/Linux: <code>echo &quot;export ETHERSCAN_TOKEN=\&quot;yourtokenvalue\&quot;&quot; | sudo tee -a ~/.bash_profile</code></li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<li>Setup an account on <a href="https://infura.io">Infura</a> and create an API key<ul>
+							<li>Set <code>WEB3_INFURA_PROJECT_ID</code> environment variable to this key&#39;s value<ul>
+									<li>Windows: <code>setx WEB3_INFURA_PROJECT_ID yourtokenvalue</code></li>
+									<li>Mac/Linux: <code>echo &quot;export WEB3_INFURA_PROJECT_ID=\&quot;yourtokenvalue\&quot;&quot; | sudo tee -a ~/.bash_profile</code></li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<li>Close &amp; re-open your terminal before proceeding (to get the new environment variable values)</li>
+					<li>If you don&#39;t have git yet, go <a href="https://docs.github.com/en/free-pro-team@latest/github/getting-started-with-github/set-up-git">set it up</a></li>
+					<li>Pull the repository from GitHub and install its dependencies<ul>
+							<li><code>git clone https://github.com/iearn-finance/yearn-vaults</code></li>
+							<li><code>cd yearn-vaults</code></li>
+							<li><code>yarn install --lock-file</code><ul>
+									<li>You may have to install with <code>--ignore-engines</code> (try this if you get an error)</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<li>Compile the Smart Contracts:<ul>
+							<li><code>brownie compile</code></li>
+						</ul>
+					</li>
+					<li><code>brownie test tests/functional/ -s -n auto</code><ul>
+							<li>If everything worked, you&#39;ll see something like the following:
+							<img src="https://i.imgur.com/wGSmCrY.png" alt=""></li>
+						</ul>
+					</li>
+					<li>Launch VSCode<ul>
+							<li>If you&#39;re in Windows using WSL, type <code>code .</code> to launch VSCode<ul>
+									<li>At this point install <a href="https://marketplace.visualstudio.com/items?itemName=JuanBlanco.solidity">Solidity Compiler</a> - be sure to <em>Install in WSL</em></li>
+									<li>Install <a href="https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-vyper">Vyper</a> as well on WSL</li>
+								</ul>
+							</li>
+							<li>Open one of the .sol files, right click the code and click <em>Soldity: Change Workspace compiler version (Remote)</em>, Change to 0.6.12<ul>
+									<li>Alternatively, go to File -&gt; Preferences -&gt; Settings</li>
+									<li>If you’re using WSL, go to the Remote [WSL] tab</li>
+									<li>Otherwise choose the Workspace tab<ul>
+											<li>Search for <em>Solidity</em> and copy and paste <em>v0.6.12+commit.27d51765</em> into the <em>Solidity: Compile Using Remote Version</em> textbox</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+							<li>Set Black as the linter.<ul>
+									<li>You&#39;ll see a toast notification the bottom right asking about linting, choose <em>black</em></li>
+									<li>If you don&#39;t see this, just go to <em>File</em> -&gt; <em>Preferences</em> -&gt; <em>Settings</em><ul>
+											<li>If you&#39;re using WSL, go to the <em>Remote [WSL]</em> tab.</li>
+											<li>Otherwise choose the <em>Workspace</em> tab</li>
+											<li>Search for <em>python formatting provider</em> and choose <em>black</em>.</li>
+											<li>Search for <em>format on save</em> and check the box</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<li>Lastly, you&#39;ll want to add .vscode to to your global .gitignore<ul>
+							<li>Use a terminal on Mac / Linux, use Git Bash on Windows</li>
+							<li><code>touch ~/.gitignore_global</code></li>
+							<li>use your favorite editor and add <code>.vscode/</code> to the ignore file<ul>
+									<li>Using vi:<ul>
+											<li><code>vi ~/.gitignore_global</code></li>
+											<li>copy <code>.vscode/</code> and hit <code>p</code> in vi</li>
+											<li>type <code>:x</code> and hit enter</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+							<li><code>git config --global core.excludesfile ~/.gitignore_global</code></li>
+						</ul>
+					</li>
+					<li>Congratulations! You&#39;re all set up.<ul>
+							<li>Use <code>git pull</code> to stay up to date with any changes made to the source code</li>
+						</ul>
+					</li>
+				</ol>
+				<a href="#tests" id="tests" style="color: inherit; text-decoration: none;">
+					<h3>Tests</h3>
+				</a>
+				<p>If you&#39;re not familiar with brownie, see the <a href="https://eth-brownie.readthedocs.io/en/stable/quickstart.html">quickstart</a>.</p>
+				<p>The fastest way to run the tests is:</p>
+				<pre><code class="language-bash">brownie <span class="hljs-built_in">test</span> tests/functional/ -n auto</code></pre>
+				<p>Run tests with coverage and gas profiling:</p>
+				<pre><code class="language-bash">brownie <span class="hljs-built_in">test</span> tests/functional/ --coverage --gas -n auto</code></pre>
+				<p>A brief explanation of flags:</p>
+				<ul>
+					<li><code>-s</code> - provides iterative display of the tests being executed</li>
+					<li><code>-n auto</code> - parallelize the tests, letting brownie choose the degree of parallelization</li>
+					<li><code>--gas</code> - generates a gas profile report</li>
+					<li><code>--coverage</code> - generates a test coverage report</li>
+				</ul>
+				<a href="#formatting" id="formatting" style="color: inherit; text-decoration: none;">
+					<h3>Formatting</h3>
+				</a>
+				<p>Check linter rules for <code>*.json</code> and <code>*.sol</code> files:</p>
+				<pre><code class="language-bash">yarn lint:check</code></pre>
+				<p>Fix linter errors for <code>*.json</code> and <code>*.sol</code> files:</p>
+				<pre><code class="language-bash">yarn lint:fix</code></pre>
+				<p>Check linter rules for <code>*.py</code> files:</p>
+				<pre><code class="language-bash">black . --check</code></pre>
+				<p>Fix linter errors for <code>*.py</code> files:</p>
+				<pre><code class="language-bash">black .</code></pre>
+				<a href="#security" id="security" style="color: inherit; text-decoration: none;">
+					<h3>Security</h3>
+				</a>
+				<p>For security concerns, please visit <a href="https://github.com/iearn-finance/yearn-vaults/security/policy">Bug Bounty</a>.</p>
+				<a href="#documentation" id="documentation" style="color: inherit; text-decoration: none;">
+					<h3>Documentation</h3>
+				</a>
+				<p>You can read more about Yearn Finance on our documentation <a href="https://docs.yearn.finance">webpage</a>.</p>
+				<a href="#discussion" id="discussion" style="color: inherit; text-decoration: none;">
+					<h3>Discussion</h3>
+				</a>
+				<p>For questions not covered in the docs, please visit <a href="http://discord.yearn.finance">our Discord server</a>.</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-enum">
+						<a href="enums/basestrategyevents.html" class="tsd-kind-icon">Base<wbr>Strategy<wbr>Events</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/registryevents.html" class="tsd-kind-icon">Registry<wbr>Events</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/strategyapievents.html" class="tsd-kind-icon">StrategyAPIEvents</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/teststrategyevents.html" class="tsd-kind-icon">Test<wbr>Strategy<wbr>Events</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/tokenevents.html" class="tsd-kind-icon">Token<wbr>Events</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/vaultapievents.html" class="tsd-kind-icon">VaultAPIEvents</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/vaultevents.html" class="tsd-kind-icon">Vault<wbr>Events</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/basestrategycontract.html" class="tsd-kind-icon">Base<wbr>Strategy<wbr>Contract</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/registrycontract.html" class="tsd-kind-icon">Registry<wbr>Contract</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/strategyapicontract.html" class="tsd-kind-icon">StrategyAPIContract</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/testguestlistcontract.html" class="tsd-kind-icon">Test<wbr>Guest<wbr>List<wbr>Contract</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/teststrategycontract.html" class="tsd-kind-icon">Test<wbr>Strategy<wbr>Contract</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/tokencontract.html" class="tsd-kind-icon">Token<wbr>Contract</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/vaultapicontract.html" class="tsd-kind-icon">VaultAPIContract</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/vaultcontract.html" class="tsd-kind-icon">Vault<wbr>Contract</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/basestrategyharvestedeventargs.html" class="tsd-kind-icon">Base<wbr>Strategy<wbr>Harvested<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/basestrategyupdateddebtthresholdeventargs.html" class="tsd-kind-icon">Base<wbr>Strategy<wbr>Updated<wbr>Debt<wbr>Threshold<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/basestrategyupdatedkeepereventargs.html" class="tsd-kind-icon">Base<wbr>Strategy<wbr>Updated<wbr>Keeper<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/basestrategyupdatedprofitfactoreventargs.html" class="tsd-kind-icon">Base<wbr>Strategy<wbr>Updated<wbr>Profit<wbr>Factor<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/basestrategyupdatedreportdelayeventargs.html" class="tsd-kind-icon">Base<wbr>Strategy<wbr>Updated<wbr>Report<wbr>Delay<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/basestrategyupdatedrewardseventargs.html" class="tsd-kind-icon">Base<wbr>Strategy<wbr>Updated<wbr>Rewards<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/basestrategyupdatedstrategisteventargs.html" class="tsd-kind-icon">Base<wbr>Strategy<wbr>Updated<wbr>Strategist<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/registrynewexperimentalvaulteventargs.html" class="tsd-kind-icon">Registry<wbr>New<wbr>Experimental<wbr>Vault<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/registrynewgovernanceeventargs.html" class="tsd-kind-icon">Registry<wbr>New<wbr>Governance<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/registrynewreleaseeventargs.html" class="tsd-kind-icon">Registry<wbr>New<wbr>Release<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/registrynewvaulteventargs.html" class="tsd-kind-icon">Registry<wbr>New<wbr>Vault<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/registryvaulttaggedeventargs.html" class="tsd-kind-icon">Registry<wbr>Vault<wbr>Tagged<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/strategyapiharvestedeventargs.html" class="tsd-kind-icon">StrategyAPIHarvested<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/teststrategyharvestedeventargs.html" class="tsd-kind-icon">Test<wbr>Strategy<wbr>Harvested<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/teststrategyupdateddebtthresholdeventargs.html" class="tsd-kind-icon">Test<wbr>Strategy<wbr>Updated<wbr>Debt<wbr>Threshold<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/teststrategyupdatedkeepereventargs.html" class="tsd-kind-icon">Test<wbr>Strategy<wbr>Updated<wbr>Keeper<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/teststrategyupdatedprofitfactoreventargs.html" class="tsd-kind-icon">Test<wbr>Strategy<wbr>Updated<wbr>Profit<wbr>Factor<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/teststrategyupdatedreportdelayeventargs.html" class="tsd-kind-icon">Test<wbr>Strategy<wbr>Updated<wbr>Report<wbr>Delay<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/teststrategyupdatedrewardseventargs.html" class="tsd-kind-icon">Test<wbr>Strategy<wbr>Updated<wbr>Rewards<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/teststrategyupdatedstrategisteventargs.html" class="tsd-kind-icon">Test<wbr>Strategy<wbr>Updated<wbr>Strategist<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/tokenapprovaleventargs.html" class="tsd-kind-icon">Token<wbr>Approval<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/tokentransfereventargs.html" class="tsd-kind-icon">Token<wbr>Transfer<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/vaultapiapprovaleventargs.html" class="tsd-kind-icon">VaultAPIApproval<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/vaultapitransfereventargs.html" class="tsd-kind-icon">VaultAPITransfer<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/vaultapprovaleventargs.html" class="tsd-kind-icon">Vault<wbr>Approval<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/vaultemergencyshutdowneventargs.html" class="tsd-kind-icon">Vault<wbr>Emergency<wbr>Shutdown<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/vaultstrategyaddedeventargs.html" class="tsd-kind-icon">Vault<wbr>Strategy<wbr>Added<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/vaultstrategyaddedtoqueueeventargs.html" class="tsd-kind-icon">Vault<wbr>Strategy<wbr>Added<wbr>ToQueue<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/vaultstrategymigratedeventargs.html" class="tsd-kind-icon">Vault<wbr>Strategy<wbr>Migrated<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/vaultstrategyremovedfromqueueeventargs.html" class="tsd-kind-icon">Vault<wbr>Strategy<wbr>Removed<wbr>From<wbr>Queue<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/vaultstrategyreportedeventargs.html" class="tsd-kind-icon">Vault<wbr>Strategy<wbr>Reported<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/vaultstrategyrevokedeventargs.html" class="tsd-kind-icon">Vault<wbr>Strategy<wbr>Revoked<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/vaultstrategyupdatedebtlimiteventargs.html" class="tsd-kind-icon">Vault<wbr>Strategy<wbr>Update<wbr>Debt<wbr>Limit<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/vaultstrategyupdateperformancefeeeventargs.html" class="tsd-kind-icon">Vault<wbr>Strategy<wbr>Update<wbr>Performance<wbr>Fee<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/vaultstrategyupdateratelimiteventargs.html" class="tsd-kind-icon">Vault<wbr>Strategy<wbr>Update<wbr>Rate<wbr>Limit<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/vaulttransfereventargs.html" class="tsd-kind-icon">Vault<wbr>Transfer<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/vaultupdatedepositlimiteventargs.html" class="tsd-kind-icon">Vault<wbr>Update<wbr>Deposit<wbr>Limit<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/vaultupdategovernanceeventargs.html" class="tsd-kind-icon">Vault<wbr>Update<wbr>Governance<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/vaultupdateguardianeventargs.html" class="tsd-kind-icon">Vault<wbr>Update<wbr>Guardian<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/vaultupdateguestlisteventargs.html" class="tsd-kind-icon">Vault<wbr>Update<wbr>Guest<wbr>List<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/vaultupdatemanagementeventargs.html" class="tsd-kind-icon">Vault<wbr>Update<wbr>Management<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/vaultupdatemanagementfeeeventargs.html" class="tsd-kind-icon">Vault<wbr>Update<wbr>Management<wbr>Fee<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/vaultupdateperformancefeeeventargs.html" class="tsd-kind-icon">Vault<wbr>Update<wbr>Performance<wbr>Fee<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/vaultupdaterewardseventargs.html" class="tsd-kind-icon">Vault<wbr>Update<wbr>Rewards<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/vaultupdatewithdrawalqueueeventargs.html" class="tsd-kind-icon">Vault<wbr>Update<wbr>Withdrawal<wbr>Queue<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#basestrategyeventargs" class="tsd-kind-icon">Base<wbr>Strategy<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#registryeventargs" class="tsd-kind-icon">Registry<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#strategyapieventargs" class="tsd-kind-icon">StrategyAPIEvent<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#teststrategyeventargs" class="tsd-kind-icon">Test<wbr>Strategy<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#tokeneventargs" class="tsd-kind-icon">Token<wbr>Event<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#vaultapieventargs" class="tsd-kind-icon">VaultAPIEvent<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#vaulteventargs" class="tsd-kind-icon">Vault<wbr>Event<wbr>Args</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
