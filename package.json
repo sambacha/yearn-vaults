@@ -1,23 +1,40 @@
 {
-    "name": "yearn-protocol",
-    "devDependencies": {
-        "@commitlint/cli": "^11.0.0",
-        "@commitlint/config-conventional": "^11.0.0",
-        "ethlint": "^1.2.5",
-        "husky": "^4.3.0",
-        "prettier": "^2.1.2",
-        "prettier-plugin-solidity": "^1.0.0-alpha.57",
-        "pretty-quick": "^3.0.2"
-    },
-    "scripts": {
-        "lint": "pretty-quick --pattern '**/*.*(sol|json)' --verbose",
-        "lint:check": "prettier --check **/*.sol **/*.json",
-        "lint:fix": "pretty-quick --pattern '**/*.*(sol|json)' --staged --verbose"
-    },
-    "husky": {
-        "hooks": {
-            "pre-commit": "yarn lint:fix",
-            "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-        }
-    }
+  "name": "@yearnvaults/contracts",
+  "version": "1.0.0",
+  "description": "NodeJS Version - Please read and be familiar with the [Specification](SPECIFICATION.md).",
+  "main": "index.js",
+  "directories": {
+    "test": "tests",
+     "src": "src",
+     "contracts": "contracts"
+  },
+  "scripts": {
+    "test": "truffle migrate --reset && truffle test",
+    "compile": "yarn truffle compile && yarn typechain --target truffle './build/**/*.json'",
+    "coverage": "yarn compile && yarn truffle run coverage",
+    "fmt": "prettier --write contracts/GasEVO.sol",
+    "check-env": "node -e 'console.log(process.env)' | grep npm",
+    "lint-all": "prettier --list-different **/*.sol"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sambacha/yearn-vaults.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sambacha/yearn-vaults/issues"
+  },
+  "homepage": "https://github.com/sambacha/yearn-vaults#readme",
+  "devDependencies": {
+    "@truffle/compile-vyper": "^2.2.4",
+    "@truffle/hdwallet-provider": "^1.2.1",
+    "prettier": "^2.2.1",
+    "prettier-plugin-solidity": "^1.0.0-beta.2",
+    "truffle": "^5.1.60"
+  },
+  "dependencies": {
+    "ethers": "^5.0.24"
+  }
 }
