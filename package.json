@@ -1,12 +1,12 @@
 {
   "name": "@yearnvaults/contracts",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "NodeJS Version - Please read and be familiar with the [Specification](SPECIFICATION.md).",
   "main": "index.js",
   "directories": {
     "test": "tests",
-     "src": "src",
-     "contracts": "contracts"
+    "src": "src",
+    "contracts": "contracts"
   },
   "scripts": {
     "test": "truffle migrate --reset && truffle test",
