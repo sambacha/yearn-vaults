@@ -2,7 +2,7 @@
   "name": "@yearnvaults/contracts",
   "version": "1.0.1",
   "description": "NodeJS Version - Please read and be familiar with the [Specification](SPECIFICATION.md).",
-  "main": "index.js",
+  "main": "src/vault.ts",
   "directories": {
     "test": "tests",
     "src": "src",
@@ -20,9 +20,9 @@
     "type": "git",
     "url": "git+https://github.com/sambacha/yearn-vaults.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["ethereum", "yearn", "defi", "Cryptocurrency", "yfi"],
+  "author": "Yearn Contributors",
+  "license": "AGPL",
   "bugs": {
     "url": "https://github.com/sambacha/yearn-vaults/issues"
   },
