@@ -22,7 +22,7 @@
   },
   "keywords": ["ethereum", "yearn", "defi", "Cryptocurrency", "yfi"],
   "author": "Yearn Contributors",
-  "license": "AGPL",
+  "license": "AGPL-1.0",
   "bugs": {
     "url": "https://github.com/sambacha/yearn-vaults/issues"
   },
