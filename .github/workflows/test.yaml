@@ -124,3 +124,6 @@ jobs:
 
     - name: Run Tests
       run: brownie test tests/integration/ -s --revert-tb
+    - name: Crytic
+      run: crytic-compile . --compile-force-framework Brownie
+       
