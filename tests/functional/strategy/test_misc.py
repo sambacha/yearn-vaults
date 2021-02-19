@@ -1,20 +1,22 @@
 import pytest
 import brownie
 
+MAX_UINT256 = 2 ** 256 - 1
+
 
 def test_harvest_tend_authority(gov, keeper, strategist, strategy, rando):
     # Only keeper, strategist, or gov can call tend
     strategy.tend({"from": keeper})
     strategy.tend({"from": strategist})
     strategy.tend({"from": gov})
-    with brownie.reverts():
+    with brownie.reverts("!authorized"):
         strategy.tend({"from": rando})
 
     # Only keeper, strategist, or gov can call harvest
     strategy.harvest({"from": keeper})
     strategy.harvest({"from": strategist})
     strategy.harvest({"from": gov})
-    with brownie.reverts():
+    with brownie.reverts("!authorized"):
         strategy.harvest({"from": rando})
 
 
@@ -23,28 +25,54 @@ def test_harvest_tend_trigger(chain, gov, vault, token, TestStrategy):
     # Trigger doesn't work until strategy is added
     assert not strategy.harvestTrigger(0)
 
-    vault.addStrategy(strategy, 10 ** 18, 2 ** 256 - 1, 50, {"from": gov})
-
-    # Check that trigger works when it goes over time
+    vault.addStrategy(strategy, 2_000, 0, MAX_UINT256, 50, {"from": gov})
+    last_report = vault.strategies(strategy).dict()["lastReport"]
+    strategy.setMinReportDelay(10, {"from": gov})
+    # Must wait at least the minimum amount of time for it to be active
     assert not strategy.harvestTrigger(0)
-    chain.mine(timestamp=chain.time() + strategy.minReportDelay())
+    chain.mine(timedelta=strategy.minReportDelay() - (chain.time() - last_report))
     assert strategy.harvestTrigger(0)
-    strategy.harvest({"from": gov})
+
+    # Not high enough profit:cost ratio
+    assert not strategy.harvestTrigger(MAX_UINT256 // strategy.profitFactor())
+
+    # After maxReportDelay has expired, profit doesn't matter
+    chain.mine(timedelta=strategy.maxReportDelay() - (chain.time() - last_report))
+    assert strategy.harvestTrigger(MAX_UINT256)
+    strategy.harvest({"from": gov})  # Resets the reporting
 
     # Check that trigger works if gas costs is less than profitFactor
-    assert not strategy.harvestTrigger(0)
     profit = 10 ** 8
     token.transfer(strategy, profit, {"from": gov})
+    chain.mine(timedelta=strategy.minReportDelay())
     assert not strategy.harvestTrigger(profit // strategy.profitFactor())
     assert strategy.harvestTrigger(profit // strategy.profitFactor() - 1)
     strategy.harvest({"from": gov})
 
     # Check that trigger works if strategy is in debt using debt threshold
+    chain.mine(timedelta=strategy.minReportDelay())
+    assert vault.debtOutstanding(strategy) == 0
     vault.revokeStrategy(strategy, {"from": gov})
-    assert strategy.harvestTrigger(10 ** 9)  # Gas cost doesn't matter now
+    assert vault.debtOutstanding(strategy) > strategy.debtThreshold()
+    assert strategy.harvestTrigger(MAX_UINT256)
+
+    chain.undo()
+
+    # Check that trigger works if strategy has no outstanding debt but does have a loss
+    chain.mine(timedelta=strategy.minReportDelay())
+    loss = token.balanceOf(strategy) // 10
+    strategy._takeFunds(loss, {"from": gov})
+    assert vault.debtOutstanding(strategy) == 0
+    assert vault.debtOutstanding(strategy) <= strategy.debtThreshold()
+    totalDebt = vault.strategies(strategy).dict()["totalDebt"]
+    assert strategy.estimatedTotalAssets() + strategy.debtThreshold() < totalDebt
+    assert strategy.harvestTrigger(MAX_UINT256)
+
+    chain.undo()
+
     # Check that trigger works in emergency exit mode
     strategy.setEmergencyExit({"from": gov})
-    assert strategy.harvestTrigger(10 ** 9)
+    assert strategy.harvestTrigger(MAX_UINT256)
 
     # Stops after it runs out of balance
     while strategy.harvestTrigger(0):
@@ -58,22 +86,29 @@ def other_token(gov, Token):
     yield gov.deploy(Token)
 
 
-def test_sweep(gov, strategy, rando, token, other_token):
-    token.transfer(strategy, token.balanceOf(gov), {"from": gov})
-    other_token.transfer(strategy, other_token.balanceOf(gov), {"from": gov})
-
+def test_sweep(gov, vault, strategy, rando, token, other_token):
     # Strategy want token doesn't work
+    token.transfer(strategy, token.balanceOf(gov), {"from": gov})
     assert token.address == strategy.want()
     assert token.balanceOf(strategy) > 0
-    with brownie.reverts():
+    with brownie.reverts("!want"):
         strategy.sweep(token, {"from": gov})
 
+    # Vault share token doesn't work
+    with brownie.reverts("!shares"):
+        strategy.sweep(vault.address, {"from": gov})
+
+    # Protected token doesn't work
+    with brownie.reverts("!protected"):
+        strategy.sweep(strategy.protectedToken(), {"from": gov})
+
     # But any other random token works
+    other_token.transfer(strategy, other_token.balanceOf(gov), {"from": gov})
     assert other_token.address != strategy.want()
     assert other_token.balanceOf(strategy) > 0
     assert other_token.balanceOf(gov) == 0
     # Not any random person can do this
-    with brownie.reverts():
+    with brownie.reverts("!authorized"):
         strategy.sweep(other_token, {"from": rando})
 
     before = other_token.balanceOf(strategy)
@@ -101,3 +136,15 @@ def test_reject_ether(gov, strategy):
     # Fallback fails too
     with brownie.reverts("Cannot send ether to nonpayable function"):
         gov.transfer(strategy, 1)
+
+
+def test_set_metadataURI(gov, strategy, strategist, rando):
+    assert strategy.metadataURI() == ""  # Empty by default
+    strategy.setMetadataURI("ipfs://test", {"from": gov})
+    assert strategy.metadataURI() == "ipfs://test"
+    strategy.setMetadataURI("ipfs://test2", {"from": gov})
+    assert strategy.metadataURI() == "ipfs://test2"
+    strategy.setMetadataURI("ipfs://test3", {"from": strategist})
+    assert strategy.metadataURI() == "ipfs://test3"
+    with brownie.reverts("!authorized"):
+        strategy.setMetadataURI("ipfs://fake", {"from": rando})

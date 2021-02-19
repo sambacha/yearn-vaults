@@ -35,9 +35,8 @@
     https://github.com/iearn-finance/yearn-vaults/blob/master/SPECIFICATION.md
 """
 
-API_VERSION: constant(String[28]) = "0.2.2"
+API_VERSION: constant(String[28]) = "0.3.2"
 
-# TODO: Add ETH Configuration
 from vyper.interfaces import ERC20
 
 implements: ERC20
@@ -52,6 +51,7 @@ interface DetailedERC20:
 interface Strategy:
     def want() -> address: view
     def vault() -> address: view
+    def isActive() -> bool: view
     def estimatedTotalAssets() -> uint256: view
     def withdraw(_amount: uint256) -> uint256: nonpayable
     def migrate(_newStrategy: address): nonpayable
@@ -91,8 +91,9 @@ guestList: public(GuestList)
 struct StrategyParams:
     performanceFee: uint256  # Strategist's fee (basis points)
     activation: uint256  # Activation block.timestamp
-    debtLimit: uint256  # Maximum borrow amount
-    rateLimit: uint256  # Max increase in debt per second since last harvest
+    debtRatio: uint256  # Maximum borrow amount (in BPS of total assets)
+    minDebtPerHarvest: uint256  # Lower limit on the increase of debt since last harvest
+    maxDebtPerHarvest: uint256  # Upper limit on the increase of debt since last harvest
     lastReport: uint256  # block.timestamp of the last time a report occured
     totalDebt: uint256  # Total outstanding debt that Strategy has
     totalGain: uint256  # Total returns that Strategy has realized for Vault
@@ -101,8 +102,9 @@ struct StrategyParams:
 
 event StrategyAdded:
     strategy: indexed(address)
-    debtLimit: uint256  # Maximum borrow amount
-    rateLimit: uint256  # Increase/decrease per block
+    debtRatio: uint256  # Maximum borrow amount (in BPS of total assets)
+    minDebtPerHarvest: uint256  # Lower limit on the increase of debt since last harvest
+    maxDebtPerHarvest: uint256  # Upper limit on the increase of debt since last harvest
     performanceFee: uint256  # Strategist's fee (basis points)
 
 
@@ -110,11 +112,12 @@ event StrategyReported:
     strategy: indexed(address)
     gain: uint256
     loss: uint256
+    debtPaid: uint256
     totalGain: uint256
     totalLoss: uint256
     totalDebt: uint256
     debtAdded: uint256
-    debtLimit: uint256
+    debtRatio: uint256
 
 
 event UpdateGovernance:
@@ -157,14 +160,19 @@ event UpdateWithdrawalQueue:
     queue: address[MAXIMUM_STRATEGIES] # New active withdrawal queue
 
 
-event StrategyUpdateDebtLimit:
-    strategy: indexed(address) # Address of the strategy for the debt limit adjustment
-    debtLimit: uint256 # The new debt limit for the strategy
+event StrategyUpdateDebtRatio:
+    strategy: indexed(address) # Address of the strategy for the debt ratio adjustment
+    debtRatio: uint256 # The new debt limit for the strategy (in BPS of total assets)
 
 
-event StrategyUpdateRateLimit:
+event StrategyUpdateMinDebtPerHarvest:
     strategy: indexed(address) # Address of the strategy for the rate limit adjustment
-    rateLimit: uint256 # The new rate limit for the strategy
+    minDebtPerHarvest: uint256  # Lower limit on the increase of debt since last harvest
+
+
+event StrategyUpdateMaxDebtPerHarvest:
+    strategy: indexed(address) # Address of the strategy for the rate limit adjustment
+    maxDebtPerHarvest: uint256  # Upper limit on the increase of debt since last harvest
 
 
 event StrategyUpdatePerformanceFee:
@@ -193,6 +201,7 @@ event StrategyAddedToQueue:
 # NOTE: Track the total for overhead targeting purposes
 strategies: public(HashMap[address, StrategyParams])
 MAXIMUM_STRATEGIES: constant(uint256) = 20
+DEGREDATION_COEFFICIENT: constant(uint256) = 10 ** 18
 
 # Ordering that `withdraw` uses to determine which strategies to pull funds from
 # NOTE: Does *NOT* have to match the ordering of all the current strategies that
@@ -207,17 +216,19 @@ withdrawalQueue: public(address[MAXIMUM_STRATEGIES])
 emergencyShutdown: public(bool)
 
 depositLimit: public(uint256)  # Limit for totalAssets the Vault can hold
-debtLimit: public(uint256)  # Debt limit for the Vault across all strategies
+debtRatio: public(uint256)  # Debt ratio for the Vault across all strategies (in BPS, <= 10k)
 totalDebt: public(uint256)  # Amount of tokens that all strategies have borrowed
 lastReport: public(uint256)  # block.timestamp of last report
 activation: public(uint256)  # block.timestamp of contract deployment
+lockedProfit: public(uint256) # how much profit is locked and cant be withdrawn
 
+lockedProfitDegration: public(uint256) # rate per block of degration. DEGREDATION_COEFFICIENT is 100% per block
 rewards: public(address)  # Rewards contract where Governance fees are sent to
 # Governance Fee for management of Vault (given to `rewards`)
 managementFee: public(uint256)
 # Governance Fee for performance of Vault (given to `rewards`)
 performanceFee: public(uint256)
-FEE_MAX: constant(uint256) = 10_000  # 100%, or 10k basis points
+MAX_BPS: constant(uint256) = 10_000  # 100%, or 10k basis points
 SECS_PER_YEAR: constant(uint256) = 31_557_600  # 365.25 days
 # `nonces` track `permit` approvals with signature.
 nonces: public(HashMap[address, uint256])
@@ -281,6 +292,7 @@ def initialize(
     log UpdateManagementFee(convert(200, uint256))
     self.lastReport = block.timestamp
     self.activation = block.timestamp
+    self.lockedProfitDegration = convert(DEGREDATION_COEFFICIENT * 46 /10 ** 6 , uint256) # 6 hours in blocks
     # EIP-712
     self.DOMAIN_SEPARATOR = keccak256(
         concat(
@@ -420,6 +432,16 @@ def setRewards(rewards: address):
     self.rewards = rewards
     log UpdateRewards(rewards)
 
+@external
+def setLockedProfitDegration(degration: uint256):
+    """
+    @notice
+        Changes the locked profit degration. 
+    @param degration The rate of degration in percent per second scaled to 1e18.
+    """
+    assert msg.sender == self.governance
+    assert degration >= 0 and degration <= DEGREDATION_COEFFICIENT
+    self.lockedProfitDegration = degration
 
 @external
 def setDepositLimit(limit: uint256):
@@ -444,10 +466,13 @@ def setPerformanceFee(fee: uint256):
     @notice
         Used to change the value of `performanceFee`.
 
+        Should set this value below the maximum strategist performance fee.
+
         This may only be called by governance.
     @param fee The new performance fee to use.
     """
     assert msg.sender == self.governance
+    assert fee <= MAX_BPS
     self.performanceFee = fee
     log UpdatePerformanceFee(fee)
 
@@ -462,6 +487,7 @@ def setManagementFee(fee: uint256):
     @param fee The new management fee to use.
     """
     assert msg.sender == self.governance
+    assert fee <= MAX_BPS
     self.managementFee = fee
     log UpdateManagementFee(fee)
 
@@ -542,6 +568,41 @@ def setWithdrawalQueue(queue: address[MAXIMUM_STRATEGIES]):
         assert self.strategies[queue[i]].activation > 0
         self.withdrawalQueue[i] = queue[i]
     log UpdateWithdrawalQueue(queue)
+
+
+@internal
+def erc20_safe_transfer(token: address, receiver: address, amount: uint256):
+    # Used only to send tokens that are not the type managed by this Vault.
+    # HACK: Used to handle non-compliant tokens like USDT
+    response: Bytes[32] = raw_call(
+        token,
+        concat(
+            method_id("transfer(address,uint256)"),
+            convert(receiver, bytes32),
+            convert(amount, bytes32),
+        ),
+        max_outsize=32,
+    )
+    if len(response) > 0:
+        assert convert(response, bool), "Transfer failed!"
+
+
+@internal
+def erc20_safe_transferFrom(token: address, sender: address, receiver: address, amount: uint256):
+    # Used only to send tokens that are not the type managed by this Vault.
+    # HACK: Used to handle non-compliant tokens like USDT
+    response: Bytes[32] = raw_call(
+        token,
+        concat(
+            method_id("transferFrom(address,address,uint256)"),
+            convert(sender, bytes32),
+            convert(receiver, bytes32),
+            convert(amount, bytes32),
+        ),
+        max_outsize=32,
+    )
+    if len(response) > 0:
+        assert convert(response, bool), "Transfer failed!"
 
 
 @internal
@@ -694,7 +755,7 @@ def permit(owner: address, spender: address, amount: uint256, expiry: uint256, s
 
 @view
 @internal
-def receivertalAssets() -> uint256:
+def _totalAssets() -> uint256:
     # See note on `totalAssets()`.
     return self.token.balanceOf(self) + self.totalDebt
 
@@ -709,63 +770,7 @@ def totalAssets() -> uint256:
         the Vault.
     @return The total assets under control of this Vault.
     """
-    return self.receivertalAssets()
-
-
-@view
-@internal
-def _balanceSheetOfStrategy(strategy: address) -> uint256:
-    # See note on `balanceSheetOfStrategy()`.
-    return Strategy(strategy).estimatedTotalAssets()
-
-
-@view
-@external
-def balanceSheetOfStrategy(strategy: address) -> uint256:
-    """
-    @notice
-        Provide an accurate estimate for the total amount of assets
-        (principle + return) that `strategy` is currently managing,
-        denominated in terms of `token`.
-
-        This total is the total realizable value that could *actually* be
-        obtained from this Strategy if it were to divest its entire position
-        based on current on-chain conditions.
-    @param strategy The Strategy to estimate the realizable assets of.
-    @return An estimate of the total realizable assets in `strategy`.
-    """
-    return self._balanceSheetOfStrategy(strategy)
-
-
-@view
-@external
-def totalBalanceSheet(strategies: address[2 * MAXIMUM_STRATEGIES]) -> uint256:
-    """
-    @notice
-        Measure the total balance sheet of this Vault, using the list of
-        strategies given above.
-        (2x the expected maximum is used to ensure completeness.)
-        NOTE: The safety of this function depends *entirely* on the list of
-            strategies given as the function argument. Care should be taken to
-            choose this list to ensure that the estimate is accurate. No
-            additional checking is used.
-        NOTE: Guardian should use this value vs. `totalAssets()` to determine
-            if a condition exists where the Vault is experiencing a dangerous
-            'balance sheet' attack, leading Vault shares to be worth less than
-            what their price on paper is (based on their debt)
-    @param strategies
-        A list of strategies managed by this Vault, which will be included in
-        the balance sheet calculation.
-    @return The total balance sheet of this Vault.
-    """
-    balanceSheet: uint256 = self.token.balanceOf(self)
-
-    for strategy in strategies:
-        if strategy == ZERO_ADDRESS:
-            break
-        balanceSheet += self._balanceSheetOfStrategy(strategy)
-
-    return balanceSheet
+    return self._totalAssets()
 
 
 @internal
@@ -780,7 +785,7 @@ def _issueSharesForAmount(to: address, amount: uint256) -> uint256:
     if totalSupply > 0:
         # Mint amount of shares based on what the Vault is managing overall
         # NOTE: if sqrt(token.totalSupply()) > 1e39, this could potentially revert
-        shares = amount * totalSupply / self.receivertalAssets()
+        shares = amount * totalSupply / self._totalAssets()
     else:
         # No existing shares, so mint 1:1
         shares = amount
@@ -794,6 +799,7 @@ def _issueSharesForAmount(to: address, amount: uint256) -> uint256:
 
 
 @external
+@nonreentrant("withdraw")
 def deposit(_amount: uint256 = MAX_UINT256, recipient: address = msg.sender) -> uint256:
     """
     @notice
@@ -834,12 +840,12 @@ def deposit(_amount: uint256 = MAX_UINT256, recipient: address = msg.sender) -> 
     # up to deposit limit
     if amount == MAX_UINT256:
         amount = min(
-            self.depositLimit - self.receivertalAssets(),
+            self.depositLimit - self._totalAssets(),
             self.token.balanceOf(msg.sender),
         )
     else:
         # Ensure deposit limit is respected
-        assert self.receivertalAssets() + amount <= self.depositLimit
+        assert self._totalAssets() + amount <= self.depositLimit
 
     # Ensure we are depositing something
     assert amount > 0
@@ -854,7 +860,7 @@ def deposit(_amount: uint256 = MAX_UINT256, recipient: address = msg.sender) -> 
     shares: uint256 = self._issueSharesForAmount(recipient, amount)
 
     # Tokens are transferred from msg.sender (may be different from _recipient)
-    assert self.token.transferFrom(msg.sender, self, amount)
+    self.erc20_safe_transferFrom(self.token.address, msg.sender, self, amount)
 
     return shares  # Just in case someone wants them
 
@@ -864,17 +870,23 @@ def deposit(_amount: uint256 = MAX_UINT256, recipient: address = msg.sender) -> 
 def _shareValue(shares: uint256) -> uint256:
     # Determines the current value of `shares`.
         # NOTE: if sqrt(Vault.totalAssets()) >>> 1e39, this could potentially revert
-    return (shares * (self.receivertalAssets())) / self.totalSupply
+    lockedFundsRatio: uint256 = (block.timestamp - self.lastReport) * self.lockedProfitDegration
+    freeFunds: uint256 = self._totalAssets()
 
+    if(lockedFundsRatio < DEGREDATION_COEFFICIENT):
+        freeFunds -= (self.lockedProfit - (lockedFundsRatio * self.lockedProfit / DEGREDATION_COEFFICIENT))
+    # NOTE: using 1e3 for extra precision here, when decimals is low
+    return ((10 ** 3 * (shares * freeFunds)) / self.totalSupply) / 10 ** 3
 
+    
 @view
 @internal
 def _sharesForAmount(amount: uint256) -> uint256:
     # Determines how many shares `amount` of token would receive.
     # See dev note on `deposit`.
-    if self.receivertalAssets() > 0:
-        # NOTE: if sqrt(token.totalSupply()) > 1e39, this could potentially revert
-        return (amount * self.totalSupply) / self.receivertalAssets()
+    if self._totalAssets() > 0:
+        # NOTE: if sqrt(token.totalSupply()) > 1e37, this could potentially revert
+        return ((10 ** 3 * (amount * self.totalSupply)) / self._totalAssets()) / 10 ** 3
     else:
         return 0
 
@@ -884,14 +896,18 @@ def _sharesForAmount(amount: uint256) -> uint256:
 def maxAvailableShares() -> uint256:
     """
     @notice
-        Determines the total quantity of shares this Vault can provide,
-        factoring in assets currently residing in the Vault, as well as
-        those deployed to strategies.
+        Determines the maximum quantity of shares this Vault can facilitate a
+        withdrawal for, factoring in assets currently residing in the Vault,
+        as well as those deployed to strategies on the Vault's balance sheet.
     @dev
         Regarding how shares are calculated, see dev note on `deposit`.
 
         If you want to calculated the maximum a user could withdraw up to,
         you want to use this function.
+
+        Note that the amount provided by this function is the theoretical
+        maximum possible from withdrawing, the real amount depends on the
+        realized losses incurred during withdrawal.
     @return The total quantity of shares this Vault can provide.
     """
     shares: uint256 = self._sharesForAmount(self.token.balanceOf(self))
@@ -905,7 +921,12 @@ def maxAvailableShares() -> uint256:
 
 
 @external
-def withdraw(_shares: uint256 = MAX_UINT256, recipient: address = msg.sender) -> uint256:
+@nonreentrant("withdraw")
+def withdraw(
+    maxShares: uint256 = MAX_UINT256,
+    recipient: address = msg.sender,
+    maxLoss: uint256 = 1,  # 0.01% [BPS]
+) -> uint256:
     """
     @notice
         Withdraws the calling account's tokens from this Vault, redeeming
@@ -935,13 +956,16 @@ def withdraw(_shares: uint256 = MAX_UINT256, recipient: address = msg.sender) ->
         entitled to, if the Vault's estimated value were otherwise measured
         through external means, accounting for whatever exceptional scenarios
         exist for the Vault (that aren't covered by the Vault's own design.)
-    @param _shares How many shares to redeem for tokens, defaults to all.
+    @param maxShares
+        How many shares to try and redeem for tokens, defaults to all.
     @param recipient
         The address to issue the shares in this Vault to. Defaults to the
         caller's address.
-    @return The quantity of tokens redeemable for `_shares`.
+    @param maxLoss
+        The maximum acceptable loss to sustain on withdrawal. Defaults to 0.01%.
+    @return The quantity of tokens redeemed for `_shares`.
     """
-    shares: uint256 = _shares  # May reduce this number below
+    shares: uint256 = maxShares  # May reduce this number below
 
     # If _shares not specified, transfer full share balance
     if shares == MAX_UINT256:
@@ -953,18 +977,25 @@ def withdraw(_shares: uint256 = MAX_UINT256, recipient: address = msg.sender) ->
     # See @dev note, above.
     value: uint256 = self._shareValue(shares)
 
+    totalLoss: uint256 = 0
     if value > self.token.balanceOf(self):
         # We need to go get some from our strategies in the withdrawal queue
-        # NOTE: This performs forced withdrawals from each Strategy. There is
-        #       a 0.5% withdrawal fee assessed on each forced withdrawal (<= 0.5% total)
+        # NOTE: This performs forced withdrawals from each Strategy. During
+        #       forced withdrawal, a Strategy may realize a loss. That loss
+        #       is reported back to the Vault, and the will affect the amount
+        #       of tokens that the withdrawer receives for their shares. They
+        #       can optionally specify the maximum acceptable loss (in BPS)
+        #       to prevent excessive losses on their withdrawals (which may
+        #       happen in certain edge cases where Strategies realize a loss)
         for strategy in self.withdrawalQueue:
             if strategy == ZERO_ADDRESS:
                 break  # We've exhausted the queue
 
-            if value <= self.token.balanceOf(self):
+            vault_balance: uint256 = self.token.balanceOf(self)
+            if value <= vault_balance:
                 break  # We're done withdrawing
 
-            amountNeeded: uint256 = value - self.token.balanceOf(self)
+            amountNeeded: uint256 = value - vault_balance
 
             # NOTE: Don't withdraw more than the debt so that Strategy can still
             #       continue to work based on the profits it has
@@ -975,10 +1006,14 @@ def withdraw(_shares: uint256 = MAX_UINT256, recipient: address = msg.sender) ->
                 continue  # Nothing to withdraw from this Strategy, try the next one
 
             # Force withdraw amount from each Strategy in the order set by governance
-            before: uint256 = self.token.balanceOf(self)
             loss: uint256 = Strategy(strategy).withdraw(amountNeeded)
-            withdrawn: uint256 = self.token.balanceOf(self) - before
-            value -= loss  # NOTE: Withdrawer incurs any losses from liquidation
+            withdrawn: uint256 = self.token.balanceOf(self) - vault_balance
+
+            # NOTE: Withdrawer incurs any losses from liquidation
+            if loss > 0:
+                value -= loss
+                totalLoss += loss
+                self.strategies[strategy].totalLoss += loss
 
             # Reduce the Strategy's debt by the amount withdrawn ("realized returns")
             # NOTE: This doesn't add to returns as it's not earned by "normal means"
@@ -988,9 +1023,16 @@ def withdraw(_shares: uint256 = MAX_UINT256, recipient: address = msg.sender) ->
     # NOTE: We have withdrawn everything possible out of the withdrawal queue
     #       but we still don't have enough to fully pay them back, so adjust
     #       to the total amount we've freed up through forced withdrawals
-    if value > self.token.balanceOf(self):
-        value = self.token.balanceOf(self)
-        shares = self._sharesForAmount(value)
+    vault_balance: uint256 = self.token.balanceOf(self)
+    if value > vault_balance:
+        value = vault_balance
+        # NOTE: Burn # of shares that corresponds to what Vault has on-hand,
+        #       including the losses that were incurred above during withdrawals
+        shares = self._sharesForAmount(value + totalLoss)
+
+    # NOTE: This loss protection is put in place to revert if losses from
+    #       withdrawing are more than what is considered acceptable.
+    assert totalLoss <= maxLoss * (value + totalLoss) / MAX_BPS
 
     # Burn shares (full value of what is being withdrawn)
     self.totalSupply -= shares
@@ -998,7 +1040,7 @@ def withdraw(_shares: uint256 = MAX_UINT256, recipient: address = msg.sender) ->
     log Transfer(msg.sender, ZERO_ADDRESS, shares)
 
     # Withdraw remaining balance to _recipient (may be different to msg.sender) (minus fee)
-    assert self.token.transfer(recipient, value)
+    self.erc20_safe_transfer(self.token.address, recipient, value)
 
     return value
 
@@ -1036,8 +1078,9 @@ def _organizeWithdrawalQueue():
 @external
 def addStrategy(
     strategy: address,
-    debtLimit: uint256,
-    rateLimit: uint256,
+    debtRatio: uint256,
+    minDebtPerHarvest: uint256,
+    maxDebtPerHarvest: uint256,
     performanceFee: uint256,
 ):
     """
@@ -1049,42 +1092,59 @@ def addStrategy(
         The Strategy will be appended to `withdrawalQueue`, call
         `setWithdrawalQueue` to change the order.
     @param strategy The address of the Strategy to add.
-    @param debtLimit The quantity of assets `strategy` can manage.
-    @param rateLimit
-        How many assets per block this Vault may deposit to or withdraw from
-        `strategy`.
+    @param debtRatio
+        The share of the total assets in the `vault that the `strategy` has access to.
+    @param minDebtPerHarvest
+        Lower limit on the increase of debt since last harvest
+    @param maxDebtPerHarvest
+        Upper limit on the increase of debt since last harvest
     @param performanceFee
         The fee the strategist will receive based on this Vault's performance.
     """
-    assert strategy != ZERO_ADDRESS
+    # Check if queue is full
+    assert self.withdrawalQueue[MAXIMUM_STRATEGIES - 1] == ZERO_ADDRESS
 
+    # Check calling conditions
+    assert not self.emergencyShutdown
     assert msg.sender == self.governance
+
+    # Check strategy configuration
+    assert strategy != ZERO_ADDRESS
     assert self.strategies[strategy].activation == 0
     assert self == Strategy(strategy).vault()
     assert self.token.address == Strategy(strategy).want()
+
+    # Check strategy parameters
+    assert self.debtRatio + debtRatio <= MAX_BPS
+    assert minDebtPerHarvest <= maxDebtPerHarvest
+    assert performanceFee <= MAX_BPS - self.performanceFee
+
+    # Add strategy to approved strategies
     self.strategies[strategy] = StrategyParams({
         performanceFee: performanceFee,
         activation: block.timestamp,
-        debtLimit: debtLimit,
-        rateLimit: rateLimit,
+        debtRatio: debtRatio,
+        minDebtPerHarvest: minDebtPerHarvest,
+        maxDebtPerHarvest: maxDebtPerHarvest,
         lastReport: block.timestamp,
         totalDebt: 0,
         totalGain: 0,
         totalLoss: 0,
     })
-    self.debtLimit += debtLimit
-    log StrategyAdded(strategy, debtLimit, rateLimit, performanceFee)
+    log StrategyAdded(strategy, debtRatio, minDebtPerHarvest, maxDebtPerHarvest, performanceFee)
 
-    # queue is full
-    assert self.withdrawalQueue[MAXIMUM_STRATEGIES - 1] == ZERO_ADDRESS
+    # Update Vault parameters
+    self.debtRatio += debtRatio
+
+    # Add strategy to the end of the withdrawal queue
     self.withdrawalQueue[MAXIMUM_STRATEGIES - 1] = strategy
     self._organizeWithdrawalQueue()
 
 
 @external
-def updateStrategyDebtLimit(
+def updateStrategyDebtRatio(
     strategy: address,
-    debtLimit: uint256,
+    debtRatio: uint256,
 ):
     """
     @notice
@@ -1092,20 +1152,21 @@ def updateStrategyDebtLimit(
 
         This may be called by governance or management.
     @param strategy The Strategy to update.
-    @param debtLimit The quantity of assets `strategy` may now manage.
+    @param debtRatio The quantity of assets `strategy` may now manage.
     """
     assert msg.sender in [self.management, self.governance]
     assert self.strategies[strategy].activation > 0
-    self.debtLimit -= self.strategies[strategy].debtLimit
-    self.strategies[strategy].debtLimit = debtLimit
-    self.debtLimit += debtLimit
-    log StrategyUpdateDebtLimit(strategy, debtLimit)
+    self.debtRatio -= self.strategies[strategy].debtRatio
+    self.strategies[strategy].debtRatio = debtRatio
+    self.debtRatio += debtRatio
+    assert self.debtRatio <= MAX_BPS
+    log StrategyUpdateDebtRatio(strategy, debtRatio)
 
 
 @external
-def updateStrategyRateLimit(
+def updateStrategyMinDebtPerHarvest(
     strategy: address,
-    rateLimit: uint256,
+    minDebtPerHarvest: uint256,
 ):
     """
     @notice
@@ -1114,12 +1175,36 @@ def updateStrategyRateLimit(
 
         This may only be called by governance or management.
     @param strategy The Strategy to update.
-    @param rateLimit The quantity of assets `strategy` may now manage.
+    @param minDebtPerHarvest
+        Lower limit on the increase of debt since last harvest
     """
     assert msg.sender in [self.management, self.governance]
     assert self.strategies[strategy].activation > 0
-    self.strategies[strategy].rateLimit = rateLimit
-    log StrategyUpdateRateLimit(strategy, rateLimit)
+    assert self.strategies[strategy].maxDebtPerHarvest >= minDebtPerHarvest
+    self.strategies[strategy].minDebtPerHarvest = minDebtPerHarvest
+    log StrategyUpdateMinDebtPerHarvest(strategy, minDebtPerHarvest)
+
+
+@external
+def updateStrategyMaxDebtPerHarvest(
+    strategy: address,
+    maxDebtPerHarvest: uint256,
+):
+    """
+    @notice
+        Change the quantity assets per block this Vault may deposit to or
+        withdraw from `strategy`.
+
+        This may only be called by governance or management.
+    @param strategy The Strategy to update.
+    @param maxDebtPerHarvest
+        Upper limit on the increase of debt since last harvest
+    """
+    assert msg.sender in [self.management, self.governance]
+    assert self.strategies[strategy].activation > 0
+    assert self.strategies[strategy].minDebtPerHarvest <= maxDebtPerHarvest
+    self.strategies[strategy].maxDebtPerHarvest = maxDebtPerHarvest
+    log StrategyUpdateMaxDebtPerHarvest(strategy, maxDebtPerHarvest)
 
 
 @external
@@ -1137,6 +1222,7 @@ def updateStrategyPerformanceFee(
     @param performanceFee The new fee the strategist will receive.
     """
     assert msg.sender == self.governance
+    assert performanceFee <= MAX_BPS - self.performanceFee
     assert self.strategies[strategy].activation > 0
     self.strategies[strategy].performanceFee = performanceFee
     log StrategyUpdatePerformanceFee(strategy, performanceFee)
@@ -1144,8 +1230,8 @@ def updateStrategyPerformanceFee(
 
 @internal
 def _revokeStrategy(strategy: address):
-    self.debtLimit -= self.strategies[strategy].debtLimit
-    self.strategies[strategy].debtLimit = 0
+    self.debtRatio -= self.strategies[strategy].debtRatio
+    self.strategies[strategy].debtRatio = 0
     log StrategyRevoked(strategy)
 
 
@@ -1167,22 +1253,26 @@ def migrateStrategy(oldVersion: address, newVersion: address):
     @param newVersion The new Strategy to migrate to.
     """
     assert msg.sender == self.governance
-
+    assert newVersion != ZERO_ADDRESS
     assert self.strategies[oldVersion].activation > 0
     assert self.strategies[newVersion].activation == 0
 
     strategy: StrategyParams = self.strategies[oldVersion]
 
     self._revokeStrategy(oldVersion)
-    # _revokeStrategy will lower the debtLimit
-    self.debtLimit += strategy.debtLimit
+    # _revokeStrategy will lower the debtRatio
+    self.debtRatio += strategy.debtRatio
+    # Debt is migrated to new strategy
+    self.strategies[oldVersion].totalDebt = 0
 
     self.strategies[newVersion] = StrategyParams({
         performanceFee: strategy.performanceFee,
-        activation: block.timestamp,
-        debtLimit: strategy.debtLimit,
-        rateLimit: strategy.rateLimit,
-        lastReport: block.timestamp,
+        # NOTE: use last report for activation time, so E[R] calc works
+        activation: strategy.lastReport,
+        debtRatio: strategy.debtRatio,
+        minDebtPerHarvest: strategy.minDebtPerHarvest,
+        maxDebtPerHarvest: strategy.maxDebtPerHarvest,
+        lastReport: strategy.lastReport,
         totalDebt: strategy.totalDebt,
         totalGain: 0,
         totalLoss: 0,
@@ -1190,7 +1280,6 @@ def migrateStrategy(oldVersion: address, newVersion: address):
 
     Strategy(oldVersion).migrate(newVersion)
     log StrategyMigrated(oldVersion, newVersion)
-    # TODO: Ensure a smooth transition in terms of  Strategy return
 
     for idx in range(MAXIMUM_STRATEGIES):
         if self.withdrawalQueue[idx] == oldVersion:
@@ -1276,15 +1365,15 @@ def removeStrategyFromQueue(strategy: address):
 @internal
 def _debtOutstanding(strategy: address) -> uint256:
     # See note on `debtOutstanding()`.
-    strategy_debtLimit: uint256 = self.strategies[strategy].debtLimit
-    strategyreceivertalDebt: uint256 = self.strategies[strategy].totalDebt
+    strategy_debtLimit: uint256 = self.strategies[strategy].debtRatio * self._totalAssets() / MAX_BPS
+    strategy_totalDebt: uint256 = self.strategies[strategy].totalDebt
 
     if self.emergencyShutdown:
-        return strategyreceivertalDebt
-    elif strategyreceivertalDebt <= strategy_debtLimit:
+        return strategy_totalDebt
+    elif strategy_totalDebt <= strategy_debtLimit:
         return 0
     else:
-        return strategyreceivertalDebt - strategy_debtLimit
+        return strategy_totalDebt - strategy_debtLimit
 
 
 @view
@@ -1307,32 +1396,39 @@ def _creditAvailable(strategy: address) -> uint256:
     if self.emergencyShutdown:
         return 0
 
-    strategy_debtLimit: uint256 = self.strategies[strategy].debtLimit
-    strategyreceivertalDebt: uint256 = self.strategies[strategy].totalDebt
-    strategy_rateLimit: uint256 = self.strategies[strategy].rateLimit
-    strategy_lastReport: uint256 = self.strategies[strategy].lastReport
+    vault_totalAssets: uint256 = self._totalAssets()
+    vault_debtLimit: uint256 = self.debtRatio * vault_totalAssets / MAX_BPS
+    vault_totalDebt: uint256 = self.totalDebt
+    strategy_debtLimit: uint256 = self.strategies[strategy].debtRatio * vault_totalAssets / MAX_BPS
+    strategy_totalDebt: uint256 = self.strategies[strategy].totalDebt
+    strategy_minDebtPerHarvest: uint256 = self.strategies[strategy].minDebtPerHarvest
+    strategy_maxDebtPerHarvest: uint256 = self.strategies[strategy].maxDebtPerHarvest
 
     # Exhausted credit line
-    if strategy_debtLimit <= strategyreceivertalDebt or self.debtLimit <= self.totalDebt:
+    if strategy_debtLimit <= strategy_totalDebt or vault_debtLimit <= vault_totalDebt:
         return 0
 
     # Start with debt limit left for the Strategy
-    available: uint256 = strategy_debtLimit - strategyreceivertalDebt
+    available: uint256 = strategy_debtLimit - strategy_totalDebt
 
     # Adjust by the global debt limit left
-    available = min(available, self.debtLimit - self.totalDebt)
-
-    # Adjust by the rate limit algorithm (limits the step size per reporting period)
-    delta: uint256 = block.timestamp - strategy_lastReport
-    # NOTE: Protect against unnecessary overflow faults here
-    # NOTE: Set `strategy_rateLimit` to 0 to disable the rate limit
-    if strategy_rateLimit > 0 and available / strategy_rateLimit >= delta:
-        available = min(available, strategy_rateLimit * delta)
+    available = min(available, vault_debtLimit - vault_totalDebt)
 
     # Can only borrow up to what the contract has in reserve
     # NOTE: Running near 100% is discouraged
-    return min(available, self.token.balanceOf(self))
+    available = min(available, self.token.balanceOf(self))
 
+    # Adjust by min and max borrow limits (per harvest)
+    # NOTE: min increase can be used to ensure that if a strategy has a minimum
+    #       amount of capital needed to purchase a position, it's not given capital
+    #       it can't make use of yet.
+    # NOTE: max increase is used to make sure each harvest isn't bigger than what
+    #       is authorized. This combined with adjusting min and max periods in
+    #       `BaseStrategy` can be used to effect a "rate limit" on capital increase.
+    if available < strategy_minDebtPerHarvest:
+        return 0
+    else:
+        return min(available, strategy_maxDebtPerHarvest)
 
 @view
 @external
@@ -1356,13 +1452,15 @@ def creditAvailable(strategy: address = msg.sender) -> uint256:
 @internal
 def _expectedReturn(strategy: address) -> uint256:
     # See note on `expectedReturn()`.
-    delta: uint256 = block.timestamp - self.strategies[strategy].lastReport
-    if delta > 0:
+    strategy_lastReport: uint256 = self.strategies[strategy].lastReport
+    timeSinceLastHarvest: uint256 = block.timestamp - strategy_lastReport
+    totalHarvestTime: uint256 = strategy_lastReport - self.strategies[strategy].activation
+
+    # NOTE: If either `timeSinceLastHarvest` or `totalHarvestTime` is 0, we can short-circuit to `0`
+    if timeSinceLastHarvest > 0 and totalHarvestTime > 0 and Strategy(strategy).isActive():
         # NOTE: Unlikely to throw unless strategy accumalates >1e68 returns
-        # NOTE: Will not throw for DIV/0 because activation <= lastReport
-        return (self.strategies[strategy].totalGain * delta) / (
-            block.timestamp - self.strategies[strategy].activation
-        )
+        # NOTE: Calculate average over period of time where harvests have occured in the past
+        return (self.strategies[strategy].totalGain * timeSinceLastHarvest) / totalHarvestTime
     else:
         return 0  # Covers the scenario when block.timestamp == activation
 
@@ -1370,8 +1468,8 @@ def _expectedReturn(strategy: address) -> uint256:
 @view
 @external
 def availableDepositLimit() -> uint256:
-    if self.depositLimit > self.receivertalAssets():
-        return self.depositLimit - self.receivertalAssets()
+    if self.depositLimit > self._totalAssets():
+        return self.depositLimit - self._totalAssets()
     else:
         return 0
 
@@ -1393,18 +1491,19 @@ def expectedReturn(strategy: address = msg.sender) -> uint256:
 
 
 @internal
-def _reportLoss(strategy: address, _loss: uint256):
+def _reportLoss(strategy: address, loss: uint256):
     # Loss can only be up the amount of debt issued to strategy
     totalDebt: uint256 = self.strategies[strategy].totalDebt
-    loss: uint256 = min(_loss, totalDebt)
+    assert totalDebt >= loss
     self.strategies[strategy].totalLoss += loss
     self.strategies[strategy].totalDebt = totalDebt - loss
     self.totalDebt -= loss
 
     # Also, make sure we reduce our trust with the strategy by the same amount
-    debtLimit: uint256 = self.strategies[strategy].debtLimit
-    self.strategies[strategy].debtLimit -= min(loss, debtLimit)
-
+    debtRatio: uint256 = self.strategies[strategy].debtRatio
+    ratio_change: uint256 = min(loss * MAX_BPS / self._totalAssets(), debtRatio)
+    self.strategies[strategy].debtRatio -= ratio_change 
+    self.debtRatio -= ratio_change
 
 @internal
 def _assessFees(strategy: address, gain: uint256):
@@ -1412,8 +1511,8 @@ def _assessFees(strategy: address, gain: uint256):
     # NOTE: In effect, this reduces overall share price by the combined fee
     # NOTE: may throw if Vault.totalAssets() > 1e64, or not called for more than a year
     governance_fee: uint256 = (
-        (self.receivertalAssets() * (block.timestamp - self.lastReport) * self.managementFee)
-        / FEE_MAX
+        (self.totalDebt * (block.timestamp - self.lastReport) * self.managementFee)
+        / MAX_BPS
         / SECS_PER_YEAR
     )
     strategist_fee: uint256 = 0  # Only applies in certain conditions
@@ -1424,9 +1523,9 @@ def _assessFees(strategy: address, gain: uint256):
         # NOTE: Unlikely to throw unless strategy reports >1e72 harvest profit
         strategist_fee = (
             gain * self.strategies[strategy].performanceFee
-        ) / FEE_MAX
+        ) / MAX_BPS
         # NOTE: Unlikely to throw unless strategy reports >1e72 harvest profit
-        governance_fee += gain * self.performanceFee / FEE_MAX
+        governance_fee += gain * self.performanceFee / MAX_BPS
 
     # NOTE: This must be called prior to taking new collateral,
     #       or the calculation will be wrong!
@@ -1525,50 +1624,35 @@ def report(gain: uint256, loss: uint256, _debtPayment: uint256) -> uint256:
     #       the Vault based on the Strategy's debt limit (as well as the Vault's).
     totalAvail: uint256 = gain + debtPayment
     if totalAvail < credit:  # credit surplus, give to Strategy
-        assert self.token.transfer(msg.sender, credit - totalAvail)
+        self.erc20_safe_transfer(self.token.address, msg.sender, credit - totalAvail)
     elif totalAvail > credit:  # credit deficit, take from Strategy
-        assert self.token.transferFrom(msg.sender, self, totalAvail - credit)
+        self.erc20_safe_transferFrom(self.token.address, msg.sender, self, totalAvail - credit)
     # else, don't do anything because it is balanced
 
     # Update reporting time
     self.strategies[msg.sender].lastReport = block.timestamp
     self.lastReport = block.timestamp
+    self.lockedProfit = gain # profit is locked and gradually released per block
 
     log StrategyReported(
         msg.sender,
         gain,
         loss,
+        debtPayment,
         self.strategies[msg.sender].totalGain,
         self.strategies[msg.sender].totalLoss,
         self.strategies[msg.sender].totalDebt,
         credit,
-        self.strategies[msg.sender].debtLimit,
+        self.strategies[msg.sender].debtRatio,
     )
 
-    if self.strategies[msg.sender].debtLimit == 0 or self.emergencyShutdown:
+    if self.strategies[msg.sender].debtRatio == 0 or self.emergencyShutdown:
         # Take every last penny the Strategy has (Emergency Exit/revokeStrategy)
         # NOTE: This is different than `debt` in order to extract *all* of the returns
-        return self._balanceSheetOfStrategy(msg.sender)
+        return Strategy(msg.sender).estimatedTotalAssets()
     else:
         # Otherwise, just return what we have as debt outstanding
         return debt
-
-
-@internal
-def erc20_safe_transfer(token: address, to: address, amount: uint256):
-    # Used only to send tokens that are not the type managed by this Vault.
-    # HACK: Used to handle non-compliant tokens like USDT
-    response: Bytes[32] = raw_call(
-        token,
-        concat(
-            method_id("transfer(address,uint256)"),
-            convert(to, bytes32),
-            convert(amount, bytes32),
-        ),
-        max_outsize=32,
-    )
-    if len(response) > 0:
-        assert convert(response, bool), "Transfer failed!"
 
 
 @external

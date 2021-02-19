@@ -1,5 +1,7 @@
 import brownie
 
+from brownie import ZERO_ADDRESS
+
 
 def test_good_migration(
     token, strategy, vault, gov, strategist, guardian, TestStrategy, rando
@@ -56,6 +58,10 @@ def test_bad_migration(
     with brownie.reverts():
         strategy.migrate(new_strategy, {"from": rando})
 
+    # Can't migrate if new strategy is 0x0
+    with brownie.reverts():
+        vault.migrateStrategy(strategy, ZERO_ADDRESS, {"from": gov})
+
 
 def test_migrated_strategy_can_call_harvest(token, strategy, vault, gov, TestStrategy):
 
@@ -68,3 +74,8 @@ def test_migrated_strategy_can_call_harvest(token, strategy, vault, gov, TestStr
     assert vault.strategies(strategy).dict()["totalGain"] == 0
     strategy.harvest({"from": gov})
     assert vault.strategies(strategy).dict()["totalGain"] == 1e18
+
+    # But after migrated it cannot be added back
+    vault.updateStrategyDebtRatio(new_strategy, 5_000, {"from": gov})
+    with brownie.reverts():
+        vault.addStrategy(strategy, 5_000, 0, 1000, 0, {"from": gov})

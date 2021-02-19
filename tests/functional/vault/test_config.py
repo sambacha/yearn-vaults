@@ -12,6 +12,10 @@ PACKAGE_VERSION = yaml.safe_load(
 ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
 
 
+def test_api_adherrance(check_api_adherrance, Vault, interface):
+    check_api_adherrance(Vault, interface.VaultAPI)
+
+
 def test_vault_deployment(guardian, gov, rewards, token, Vault):
     # Deploy the Vault without any name/symbol overrides
     vault = guardian.deploy(Vault)
@@ -30,7 +34,7 @@ def test_vault_deployment(guardian, gov, rewards, token, Vault):
     assert vault.decimals() == token.decimals()
     assert vault.apiVersion() == PACKAGE_VERSION
 
-    assert vault.debtLimit() == 0
+    assert vault.debtRatio() == 0
     assert vault.depositLimit() == 0
     assert vault.creditAvailable() == 0
     assert vault.debtOutstanding() == 0
@@ -91,14 +95,15 @@ def test_vault_setParams(
 
 
 @pytest.mark.parametrize(
-    "key,setter,val",
+    "key,setter,val,max",
     [
-        ("debtLimit", "updateStrategyDebtLimit", 500),
-        ("rateLimit", "updateStrategyRateLimit", 10),
+        ("debtRatio", "updateStrategyDebtRatio", 500, 10000),
+        ("minDebtPerHarvest", "updateStrategyMinDebtPerHarvest", 10, None),
+        ("maxDebtPerHarvest", "updateStrategyMaxDebtPerHarvest", 10, None),
     ],
 )
 def test_vault_updateStrategy(
-    chain, gov, guardian, management, vault, strategy, rando, key, setter, val
+    chain, gov, guardian, management, vault, strategy, rando, key, setter, val, max
 ):
 
     # rando shouldn't be able to call these methods
@@ -112,11 +117,44 @@ def test_vault_updateStrategy(
     # management is always allowed
     getattr(vault, setter)(strategy, val, {"from": management})
     assert vault.strategies(strategy).dict()[key] == val
-    chain.undo()
+
+    chain.undo()  # Revert previous setting
+    assert vault.strategies(strategy).dict()[key] != val
 
     # gov is always allowed
     getattr(vault, setter)(strategy, val, {"from": gov})
     assert vault.strategies(strategy).dict()[key] == val
+
+    if max:
+        # Can't set it more than max
+        getattr(vault, setter)(strategy, max, {"from": gov})
+        assert vault.strategies(strategy).dict()[key] == max
+        with brownie.reverts():
+            getattr(vault, setter)(strategy, max + 1, {"from": gov})
+        assert vault.strategies(strategy).dict()[key] == max
+
+
+def test_min_max_debtIncrease(gov, vault, TestStrategy):
+    strategy = gov.deploy(TestStrategy, vault)
+    # Can't set min > max or max < min in adding a strategy
+    with brownie.reverts():
+        vault.addStrategy(strategy, 1_000, 20_000, 10_000, 1_000, {"from": gov})
+
+    vault.addStrategy(strategy, 1_000, 10_000, 10_000, 1_000, {"from": gov})
+    # Can't set min > max
+    with brownie.reverts():
+        vault.updateStrategyMaxDebtPerHarvest(
+            strategy,
+            vault.strategies(strategy).dict()["minDebtPerHarvest"] - 1,
+            {"from": gov},
+        )
+    # Can't set max > min
+    with brownie.reverts():
+        vault.updateStrategyMinDebtPerHarvest(
+            strategy,
+            vault.strategies(strategy).dict()["maxDebtPerHarvest"] + 1,
+            {"from": gov},
+        )
 
 
 def test_vault_setGovernance(gov, vault, rando):

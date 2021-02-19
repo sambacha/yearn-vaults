@@ -4,4 +4,4 @@ __pycache__
 build/
 reports/
 node_modules/
-.DS_Store
+.test_durations

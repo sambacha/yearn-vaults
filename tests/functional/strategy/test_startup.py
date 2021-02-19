@@ -2,7 +2,10 @@ DAY = 86400  # seconds
 
 
 def test_startup(token, gov, vault, strategy, keeper, chain):
-    all_strategies = [strategy] + ["0x0000000000000000000000000000000000000000"] * 39
+    debt_per_harvest = (
+        (vault.totalAssets() - vault.totalDebt()) * (vault.debtRatio() / 10_000)
+    ) // 10  # 10 harvests, or about 8 loop iterations
+    vault.updateStrategyMaxDebtPerHarvest(strategy, debt_per_harvest, {"from": gov})
     expectedReturn = lambda: vault.expectedReturn(strategy)
 
     # Never reported yet (no data points)
@@ -11,15 +14,11 @@ def test_startup(token, gov, vault, strategy, keeper, chain):
 
     # Check accounting is maintained everywhere
     assert token.balanceOf(vault) > 0
-    assert (
-        vault.totalAssets()
-        == vault.totalBalanceSheet(all_strategies)
-        == token.balanceOf(vault)
-    )
+    assert vault.totalAssets() == token.balanceOf(vault)
     assert (
         vault.totalDebt()
         == vault.strategies(strategy).dict()["totalDebt"]
-        == vault.balanceSheetOfStrategy(strategy)
+        == strategy.estimatedTotalAssets()
         == token.balanceOf(strategy)
         == 0
     )
@@ -34,15 +33,11 @@ def test_startup(token, gov, vault, strategy, keeper, chain):
     balance = token.balanceOf(strategy)
 
     # Check accounting is maintained everywhere
-    assert (
-        vault.totalAssets()
-        == vault.totalBalanceSheet(all_strategies)
-        == token.balanceOf(vault) + balance
-    )
+    assert vault.totalAssets() == token.balanceOf(vault) + balance
     assert (
         vault.totalDebt()
         == vault.strategies(strategy).dict()["totalDebt"]
-        == vault.balanceSheetOfStrategy(strategy)
+        == strategy.estimatedTotalAssets()
         == balance
     )
 
@@ -61,22 +56,20 @@ def test_startup(token, gov, vault, strategy, keeper, chain):
     balance = token.balanceOf(strategy)
 
     # Check accounting is maintained everywhere
-    assert (
-        vault.totalAssets()
-        == vault.totalBalanceSheet(all_strategies)
-        == token.balanceOf(vault) + balance
-    )
+    assert vault.totalAssets() == token.balanceOf(vault) + balance
     assert (
         vault.totalDebt()
         == vault.strategies(strategy).dict()["totalDebt"]
-        == vault.balanceSheetOfStrategy(strategy)
+        == strategy.estimatedTotalAssets()
         == balance
     )
 
     # Ramp up debt (Should execute at least once)
     debt_limit_hit = lambda: (
-        vault.strategies(strategy).dict()["totalDebt"]
-        == vault.strategies(strategy).dict()["debtLimit"]
+        vault.strategies(strategy).dict()["totalDebt"] / vault.totalAssets()
+        # NOTE: Needs to hit at least 99% of the debt ratio, because 100% is unobtainable
+        #       (Strategy increases it's absolute debt every harvest)
+        >= 0.99 * vault.strategies(strategy).dict()["debtRatio"] / 10_000
     )
     assert not debt_limit_hit()
     while not debt_limit_hit():
@@ -91,14 +84,10 @@ def test_startup(token, gov, vault, strategy, keeper, chain):
         balance = token.balanceOf(strategy)
 
         # Check accounting is maintained everywhere
-        assert (
-            vault.totalAssets()
-            == vault.totalBalanceSheet(all_strategies)
-            == token.balanceOf(vault) + balance
-        )
+        assert vault.totalAssets() == token.balanceOf(vault) + balance
         assert (
             vault.totalDebt()
             == vault.strategies(strategy).dict()["totalDebt"]
-            == vault.balanceSheetOfStrategy(strategy)
+            == strategy.estimatedTotalAssets()
             == balance
         )

@@ -21,9 +21,17 @@ def management(accounts):
     yield accounts[3]
 
 
-@pytest.fixture
-def token(gov, Token):
-    yield gov.deploy(Token)
+@pytest.fixture(params=["Normal", "NoReturn"])
+def token(gov, Token, request):
+    token = gov.deploy(Token)
+    # NOTE: Run our test suite using both compliant and non-compliant ERC20 Token
+    if request.param == "NoReturn":
+        token._initialized = False  # otherwise Brownie throws an `AttributeError`
+        setattr(token, "transfer", token.transferWithoutReturn)
+        setattr(token, "transferFrom", token.transferFromWithoutReturn)
+        setattr(token, "approve", token.approveWithoutReturn)
+        token._initialized = True  # shhh, nothing to see here...
+    yield token
 
 
 @pytest.fixture
@@ -51,13 +59,32 @@ def keeper(accounts):
 
 
 @pytest.fixture
-def strategy(gov, strategist, keeper, token, vault, TestStrategy):
+def proxyFactory(gov, ProxyFactoryInitializable):
+    yield gov.deploy(ProxyFactoryInitializable)
+
+
+@pytest.fixture(params=["NoProxy", "Proxy"])
+def strategy(
+    gov, strategist, keeper, rewards, token, vault, TestStrategy, proxyFactory, request
+):
     strategy = strategist.deploy(TestStrategy, vault)
+
+    if request.param == "Proxy":
+        # prepare call and data to initialize the proxy
+        data = strategy.initialize.encode_input(vault, strategist, rewards, keeper)
+        # deploy the proxy using as logic the original strategy
+        tx = proxyFactory.deployMinimal(strategy, data, {"from": strategist})
+        # strategy proxy address is returned in the event ProxyCreated
+        strategyAddress = tx.events["ProxyCreated"]["proxy"]
+        # redefine strategy as the new proxy deployed
+        strategy = TestStrategy.at(strategyAddress, owner=strategist)
+
     strategy.setKeeper(keeper, {"from": strategist})
     vault.addStrategy(
         strategy,
-        token.totalSupply() // 5,  # Debt limit of 20% of token supply (40% of Vault)
-        token.totalSupply() // 8640000,  # Rate limit of 1% of token supply per day
+        4_000,  # 40% of Vault
+        0,  # Minimum debt increase per harvest
+        2 ** 256 - 1,  # maximum debt increase per harvest
         1000,  # 10% performance fee for Strategist
         {"from": gov},
     )

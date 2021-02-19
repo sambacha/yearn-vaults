@@ -1,5 +1,6 @@
 import pytest
 import brownie
+import pytest
 
 
 @pytest.fixture
@@ -92,11 +93,18 @@ def test_reject_ether(gov, vault):
         ("withdraw", [1]),
         ("deposit", [1, "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"]),
         ("withdraw", [1, "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"]),
-        ("addStrategy", ["0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", 1, 1, 1]),
+        ("addStrategy", ["0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", 1, 1, 1, 1]),
         ("addStrategyToQueue", ["0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"]),
         ("removeStrategyFromQueue", ["0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"]),
-        ("updateStrategyDebtLimit", ["0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", 1]),
-        ("updateStrategyRateLimit", ["0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", 1]),
+        ("updateStrategyDebtRatio", ["0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", 1]),
+        (
+            "updateStrategyMinDebtPerHarvest",
+            ["0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", 1],
+        ),
+        (
+            "updateStrategyMaxDebtPerHarvest",
+            ["0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", 1],
+        ),
         (
             "updateStrategyPerformanceFee",
             ["0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", 1],
@@ -124,3 +132,78 @@ def test_reject_ether(gov, vault):
     # NOTE: Just for coverage
     with brownie.reverts():
         gov.transfer(vault, 0)
+
+
+def test_deposit_withdraw_faillure(token, gov, vault):
+    token._setBlocked(vault.address, True, {"from": gov})
+    with brownie.reverts():
+        vault.deposit({"from": gov})
+
+    token._setBlocked(vault.address, False, {"from": gov})
+    token.approve(vault, 2 ** 256 - 1, {"from": gov})
+    vault.deposit({"from": gov})
+    token._setBlocked(gov, True, {"from": gov})
+
+    with brownie.reverts():
+        vault.withdraw(vault.balanceOf(gov), {"from": gov})
+
+
+def test_report_loss(token, gov, vault, strategy, accounts):
+    strategy.harvest()
+    strategy._takeFunds(token.balanceOf(strategy), {"from": gov})
+    assert token.balanceOf(strategy) == 0
+
+    # Make sure we do not send more funds to the strategy.
+    strategy.harvest()
+    assert token.balanceOf(strategy) == 0
+
+    assert vault.debtRatio() == 0
+
+
+def test_sandwich_attack(
+    chain, TestStrategy, web3, token, gov, vault, strategist, rando
+):
+
+    honest_lp = gov
+    attacker = rando
+    balance = token.balanceOf(honest_lp) / 2
+
+    # seed attacker their funds
+    token.transfer(attacker, balance, {"from": honest_lp})
+
+    # we don't use the one in conftest because we want no rate limit
+    strategy = strategist.deploy(TestStrategy, vault)
+    vault.setManagementFee(0, {"from": gov})
+    vault.setPerformanceFee(0, {"from": gov})
+    vault.addStrategy(strategy, 4_000, 0, 2 ** 256 - 1, 0, {"from": gov})
+    vault.updateStrategyPerformanceFee(strategy, 0, {"from": gov})
+
+    strategy.harvest({"from": strategist})
+    # strategy is returning 0.02%. Equivalent to 35.6% a year at 5 harvests a day
+    profit_to_be_returned = token.balanceOf(strategy) / 5000
+    token.transfer(strategy, profit_to_be_returned, {"from": honest_lp})
+
+    # now for the attack
+
+    # attacker sees harvest enter tx pool
+    attack_amount = token.balanceOf(attacker)
+
+    # attacker deposits
+    token.approve(vault, attack_amount, {"from": attacker})
+    vault.deposit(attack_amount, {"from": attacker})
+
+    # harvest happens
+    strategy.harvest({"from": strategist})
+
+    chain.sleep(1)
+    chain.mine(1)
+
+    # attacker withdraws. Pays back loan. and keeps or sells profit
+    vault.withdraw(vault.balanceOf(attacker), {"from": attacker})
+
+    profit = token.balanceOf(attacker) - attack_amount
+    profit_percent = profit / attack_amount
+
+    print(f"Attack Profit Percent: {profit_percent}")
+    # 5 rebases a day = 1780 a year. Less than 0.0004% profit on attack makes it closer to neutral EV
+    assert profit_percent == pytest.approx(0, abs=10e-5)
