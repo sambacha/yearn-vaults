@@ -1,0 +1,5280 @@
+{
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_guest",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "authorized",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "bouncer",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "guests",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "_guests",
+          "type": "address[]"
+        },
+        {
+          "internalType": "bool[]",
+          "name": "_invited",
+          "type": "bool[]"
+        }
+      ],
+      "name": "setGuests",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "vault",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "allSourcePaths": {
+    "6": "contracts/test/TestGuestList.sol"
+  },
+  "ast": {
+    "absolutePath": "contracts/test/TestGuestList.sol",
+    "exportedSymbols": {
+      "TestGuestList": [
+        1049
+      ]
+    },
+    "id": 1050,
+    "license": "GPL-3.0",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 953,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.6",
+          ".0",
+          "<",
+          "0.7",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "36:31:6"
+      },
+      {
+        "id": 954,
+        "literals": [
+          "experimental",
+          "ABIEncoderV2"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "68:33:6"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": {
+          "id": 955,
+          "nodeType": "StructuredDocumentation",
+          "src": "103:227:6",
+          "text": " @notice A basic guest list contract for testing.\n @dev For a Vyper implementation of this contract containing additional\n functionality, see https://github.com/banteg/guest-list/blob/master/contracts/GuestList.vy"
+        },
+        "fullyImplemented": true,
+        "id": 1049,
+        "linearizedBaseContracts": [
+          1049
+        ],
+        "name": "TestGuestList",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "functionSelector": "fbfa77cf",
+            "id": 957,
+            "mutability": "mutable",
+            "name": "vault",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 1049,
+            "src": "360:20:6",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 956,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "360:7:6",
+              "stateMutability": "nonpayable",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "functionSelector": "c5336835",
+            "id": 959,
+            "mutability": "mutable",
+            "name": "bouncer",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 1049,
+            "src": "386:22:6",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 958,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "386:7:6",
+              "stateMutability": "nonpayable",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "functionSelector": "0eda85ee",
+            "id": 963,
+            "mutability": "mutable",
+            "name": "guests",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 1049,
+            "src": "414:38:6",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
+              "typeString": "mapping(address => bool)"
+            },
+            "typeName": {
+              "id": 962,
+              "keyType": {
+                "id": 960,
+                "name": "address",
+                "nodeType": "ElementaryTypeName",
+                "src": "422:7:6",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "414:24:6",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
+                "typeString": "mapping(address => bool)"
+              },
+              "valueType": {
+                "id": 961,
+                "name": "bool",
+                "nodeType": "ElementaryTypeName",
+                "src": "433:4:6",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 972,
+              "nodeType": "Block",
+              "src": "683:37:6",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 970,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 967,
+                      "name": "bouncer",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 959,
+                      "src": "693:7:6",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 968,
+                        "name": "msg",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": -15,
+                        "src": "703:3:6",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_magic_message",
+                          "typeString": "msg"
+                        }
+                      },
+                      "id": 969,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "sender",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": null,
+                      "src": "703:10:6",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address_payable",
+                        "typeString": "address payable"
+                      }
+                    },
+                    "src": "693:20:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "id": 971,
+                  "nodeType": "ExpressionStatement",
+                  "src": "693:20:6"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 964,
+              "nodeType": "StructuredDocumentation",
+              "src": "459:198:6",
+              "text": " @notice Create the test guest list, setting the message sender as\n `bouncer`.\n @dev Note that since this is just for testing, you're unable to change\n `bouncer`."
+            },
+            "id": 973,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 965,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "673:2:6"
+            },
+            "returnParameters": {
+              "id": 966,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "683:0:6"
+            },
+            "scope": 1049,
+            "src": "662:58:6",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1032,
+              "nodeType": "Block",
+              "src": "1042:289:6",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 987,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 984,
+                            "name": "msg",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": -15,
+                            "src": "1059:3:6",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_magic_message",
+                              "typeString": "msg"
+                            }
+                          },
+                          "id": 985,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "sender",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": null,
+                          "src": "1059:10:6",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "==",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "id": 986,
+                          "name": "bouncer",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 959,
+                          "src": "1073:7:6",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "src": "1059:21:6",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 983,
+                      "name": "assert",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": -3,
+                      "src": "1052:6:6",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_assert_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 988,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1052:29:6",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 989,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1052:29:6"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "id": 995,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 991,
+                            "name": "_guests",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 977,
+                            "src": "1098:7:6",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_array$_t_address_$dyn_calldata_ptr",
+                              "typeString": "address[] calldata"
+                            }
+                          },
+                          "id": 992,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "length",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": null,
+                          "src": "1098:14:6",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "==",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 993,
+                            "name": "_invited",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 980,
+                            "src": "1116:8:6",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_array$_t_bool_$dyn_calldata_ptr",
+                              "typeString": "bool[] calldata"
+                            }
+                          },
+                          "id": 994,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "length",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": null,
+                          "src": "1116:15:6",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "src": "1098:33:6",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 990,
+                      "name": "assert",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": -3,
+                      "src": "1091:6:6",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_assert_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 996,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1091:41:6",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 997,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1091:41:6"
+                },
+                {
+                  "body": {
+                    "id": 1030,
+                    "nodeType": "Block",
+                    "src": "1187:138:6",
+                    "statements": [
+                      {
+                        "condition": {
+                          "argumentTypes": null,
+                          "commonType": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          },
+                          "id": 1016,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "leftExpression": {
+                            "argumentTypes": null,
+                            "baseExpression": {
+                              "argumentTypes": null,
+                              "id": 1009,
+                              "name": "_guests",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 977,
+                              "src": "1205:7:6",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_array$_t_address_$dyn_calldata_ptr",
+                                "typeString": "address[] calldata"
+                              }
+                            },
+                            "id": 1011,
+                            "indexExpression": {
+                              "argumentTypes": null,
+                              "id": 1010,
+                              "name": "i",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 999,
+                              "src": "1213:1:6",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              }
+                            },
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "nodeType": "IndexAccess",
+                            "src": "1205:10:6",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          },
+                          "nodeType": "BinaryOperation",
+                          "operator": "==",
+                          "rightExpression": {
+                            "argumentTypes": null,
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "hexValue": "30",
+                                "id": 1014,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": true,
+                                "kind": "number",
+                                "lValueRequested": false,
+                                "nodeType": "Literal",
+                                "src": "1227:1:6",
+                                "subdenomination": null,
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_rational_0_by_1",
+                                  "typeString": "int_const 0"
+                                },
+                                "value": "0"
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_rational_0_by_1",
+                                  "typeString": "int_const 0"
+                                }
+                              ],
+                              "id": 1013,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "nodeType": "ElementaryTypeNameExpression",
+                              "src": "1219:7:6",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_type$_t_address_$",
+                                "typeString": "type(address)"
+                              },
+                              "typeName": {
+                                "id": 1012,
+                                "name": "address",
+                                "nodeType": "ElementaryTypeName",
+                                "src": "1219:7:6",
+                                "typeDescriptions": {
+                                  "typeIdentifier": null,
+                                  "typeString": null
+                                }
+                              }
+                            },
+                            "id": 1015,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "typeConversion",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "1219:10:6",
+                            "tryCall": false,
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address_payable",
+                              "typeString": "address payable"
+                            }
+                          },
+                          "src": "1205:24:6",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bool",
+                            "typeString": "bool"
+                          }
+                        },
+                        "falseBody": null,
+                        "id": 1019,
+                        "nodeType": "IfStatement",
+                        "src": "1201:68:6",
+                        "trueBody": {
+                          "id": 1018,
+                          "nodeType": "Block",
+                          "src": "1231:38:6",
+                          "statements": [
+                            {
+                              "id": 1017,
+                              "nodeType": "Break",
+                              "src": "1249:5:6"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 1028,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "leftHandSide": {
+                            "argumentTypes": null,
+                            "baseExpression": {
+                              "argumentTypes": null,
+                              "id": 1020,
+                              "name": "guests",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 963,
+                              "src": "1282:6:6",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
+                                "typeString": "mapping(address => bool)"
+                              }
+                            },
+                            "id": 1024,
+                            "indexExpression": {
+                              "argumentTypes": null,
+                              "baseExpression": {
+                                "argumentTypes": null,
+                                "id": 1021,
+                                "name": "_guests",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 977,
+                                "src": "1289:7:6",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_array$_t_address_$dyn_calldata_ptr",
+                                  "typeString": "address[] calldata"
+                                }
+                              },
+                              "id": 1023,
+                              "indexExpression": {
+                                "argumentTypes": null,
+                                "id": 1022,
+                                "name": "i",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 999,
+                                "src": "1297:1:6",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "nodeType": "IndexAccess",
+                              "src": "1289:10:6",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_address",
+                                "typeString": "address"
+                              }
+                            },
+                            "isConstant": false,
+                            "isLValue": true,
+                            "isPure": false,
+                            "lValueRequested": true,
+                            "nodeType": "IndexAccess",
+                            "src": "1282:18:6",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_bool",
+                              "typeString": "bool"
+                            }
+                          },
+                          "nodeType": "Assignment",
+                          "operator": "=",
+                          "rightHandSide": {
+                            "argumentTypes": null,
+                            "baseExpression": {
+                              "argumentTypes": null,
+                              "id": 1025,
+                              "name": "_invited",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 980,
+                              "src": "1303:8:6",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_array$_t_bool_$dyn_calldata_ptr",
+                                "typeString": "bool[] calldata"
+                              }
+                            },
+                            "id": 1027,
+                            "indexExpression": {
+                              "argumentTypes": null,
+                              "id": 1026,
+                              "name": "i",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 999,
+                              "src": "1312:1:6",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              }
+                            },
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "nodeType": "IndexAccess",
+                            "src": "1303:11:6",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_bool",
+                              "typeString": "bool"
+                            }
+                          },
+                          "src": "1282:32:6",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bool",
+                            "typeString": "bool"
+                          }
+                        },
+                        "id": 1029,
+                        "nodeType": "ExpressionStatement",
+                        "src": "1282:32:6"
+                      }
+                    ]
+                  },
+                  "condition": {
+                    "argumentTypes": null,
+                    "commonType": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    },
+                    "id": 1005,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftExpression": {
+                      "argumentTypes": null,
+                      "id": 1002,
+                      "name": "i",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 999,
+                      "src": "1162:1:6",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "BinaryOperation",
+                    "operator": "<",
+                    "rightExpression": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 1003,
+                        "name": "_guests",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 977,
+                        "src": "1166:7:6",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_array$_t_address_$dyn_calldata_ptr",
+                          "typeString": "address[] calldata"
+                        }
+                      },
+                      "id": 1004,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "length",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": null,
+                      "src": "1166:14:6",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "1162:18:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "id": 1031,
+                  "initializationExpression": {
+                    "assignments": [
+                      999
+                    ],
+                    "declarations": [
+                      {
+                        "constant": false,
+                        "id": 999,
+                        "mutability": "mutable",
+                        "name": "i",
+                        "nodeType": "VariableDeclaration",
+                        "overrides": null,
+                        "scope": 1031,
+                        "src": "1147:9:6",
+                        "stateVariable": false,
+                        "storageLocation": "default",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "typeName": {
+                          "id": 998,
+                          "name": "uint256",
+                          "nodeType": "ElementaryTypeName",
+                          "src": "1147:7:6",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "value": null,
+                        "visibility": "internal"
+                      }
+                    ],
+                    "id": 1001,
+                    "initialValue": {
+                      "argumentTypes": null,
+                      "hexValue": "30",
+                      "id": 1000,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "1159:1:6",
+                      "subdenomination": null,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_0_by_1",
+                        "typeString": "int_const 0"
+                      },
+                      "value": "0"
+                    },
+                    "nodeType": "VariableDeclarationStatement",
+                    "src": "1147:13:6"
+                  },
+                  "loopExpression": {
+                    "expression": {
+                      "argumentTypes": null,
+                      "id": 1007,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "nodeType": "UnaryOperation",
+                      "operator": "++",
+                      "prefix": false,
+                      "src": "1182:3:6",
+                      "subExpression": {
+                        "argumentTypes": null,
+                        "id": 1006,
+                        "name": "i",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 999,
+                        "src": "1182:1:6",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 1008,
+                    "nodeType": "ExpressionStatement",
+                    "src": "1182:3:6"
+                  },
+                  "nodeType": "ForStatement",
+                  "src": "1142:183:6"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 974,
+              "nodeType": "StructuredDocumentation",
+              "src": "726:229:6",
+              "text": " @notice Invite guests or kick them from the party.\n @param _guests The guests to add or update.\n @param _invited A flag for each guest at the matching index, inviting or\n uninviting the guest."
+            },
+            "functionSelector": "77f32f84",
+            "id": 1033,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setGuests",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 981,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 977,
+                  "mutability": "mutable",
+                  "name": "_guests",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 1033,
+                  "src": "979:26:6",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$dyn_calldata_ptr",
+                    "typeString": "address[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 975,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "979:7:6",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 976,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "979:9:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                      "typeString": "address[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 980,
+                  "mutability": "mutable",
+                  "name": "_invited",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 1033,
+                  "src": "1007:24:6",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_bool_$dyn_calldata_ptr",
+                    "typeString": "bool[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 978,
+                      "name": "bool",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "1007:4:6",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bool",
+                        "typeString": "bool"
+                      }
+                    },
+                    "id": 979,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "1007:6:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_bool_$dyn_storage_ptr",
+                      "typeString": "bool[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "978:54:6"
+            },
+            "returnParameters": {
+              "id": 982,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1042:0:6"
+            },
+            "scope": 1049,
+            "src": "960:371:6",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 1047,
+              "nodeType": "Block",
+              "src": "1810:38:6",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "baseExpression": {
+                      "argumentTypes": null,
+                      "id": 1043,
+                      "name": "guests",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 963,
+                      "src": "1827:6:6",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
+                        "typeString": "mapping(address => bool)"
+                      }
+                    },
+                    "id": 1045,
+                    "indexExpression": {
+                      "argumentTypes": null,
+                      "id": 1044,
+                      "name": "_guest",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1036,
+                      "src": "1834:6:6",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "nodeType": "IndexAccess",
+                    "src": "1827:14:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "functionReturnParameters": 1042,
+                  "id": 1046,
+                  "nodeType": "Return",
+                  "src": "1820:21:6"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 1034,
+              "nodeType": "StructuredDocumentation",
+              "src": "1337:386:6",
+              "text": " @notice Check if a guest with a bag of a certain size is allowed into\n the party.\n @dev Note that `_amount` isn't checked to keep test setup simple, since\n from the vault tests' perspective this is a pass/fail call anyway.\n @param _guest The guest's address to check.\n @param _amount Not used. The amount of tokens the guest is bringing."
+            },
+            "functionSelector": "5ed7660e",
+            "id": 1048,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "authorized",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 1039,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1036,
+                  "mutability": "mutable",
+                  "name": "_guest",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 1048,
+                  "src": "1748:14:6",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1035,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1748:7:6",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1038,
+                  "mutability": "mutable",
+                  "name": "_amount",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 1048,
+                  "src": "1764:15:6",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1037,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1764:7:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1747:33:6"
+            },
+            "returnParameters": {
+              "id": 1042,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1041,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 1048,
+                  "src": "1804:4:6",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 1040,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1804:4:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1803:6:6"
+            },
+            "scope": 1049,
+            "src": "1728:120:6",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 1050,
+        "src": "331:1519:6"
+      }
+    ],
+    "src": "36:1815:6"
+  },
+  "bytecode": "608060405234801561001057600080fd5b50600180546001600160a01b03191633179055610386806100326000396000f3fe608060405234801561001057600080fd5b50600436106100575760003560e01c80630eda85ee1461005c5780635ed7660e1461008557806377f32f8414610098578063c5336835146100ad578063fbfa77cf146100c2575b600080fd5b61006f61006a36600461025c565b6100ca565b60405161007c9190610345565b60405180910390f35b61006f61009336600461027e565b6100df565b6100ab6100a63660046102a8565b610102565b005b6100b56101de565b60405161007c9190610331565b6100b56101ed565b60026020526000908152604090205460ff1681565b6001600160a01b03821660009081526002602052604090205460ff165b92915050565b6001546001600160a01b0316331461011657fe5b82811461011f57fe5b60005b838110156101d757600085858381811061013857fe5b905060200201602081019061014d919061025c565b6001600160a01b03161415610161576101d7565b82828281811061016d57fe5b90506020020160208101906101829190610311565b6002600087878581811061019257fe5b90506020020160208101906101a7919061025c565b6001600160a01b031681526020810191909152604001600020805460ff1916911515919091179055600101610122565b5050505050565b6001546001600160a01b031681565b6000546001600160a01b031681565b80356001600160a01b03811681146100fc57600080fd5b60008083601f840112610224578182fd5b50813567ffffffffffffffff81111561023b578182fd5b602083019150836020808302850101111561025557600080fd5b9250929050565b60006020828403121561026d578081fd5b61027783836101fc565b9392505050565b60008060408385031215610290578081fd5b61029a84846101fc565b946020939093013593505050565b600080600080604085870312156102bd578182fd5b843567ffffffffffffffff808211156102d4578384fd5b6102e088838901610213565b909650945060208701359150808211156102f8578384fd5b5061030587828801610213565b95989497509550505050565b600060208284031215610322578081fd5b81358015158114610277578182fd5b6001600160a01b0391909116815260200190565b90151581526020019056fea2646970667358221220b03d274660c925b9f4808bc63dea8056058bc74b823d8c710229b04fdf2f4f9a64736f6c634300060c0033",
+  "bytecodeSha1": "1c203e7532c095f2e3f83b9f7890e36a78047c2e",
+  "compiler": {
+    "evm_version": "istanbul",
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "version": "0.6.12"
+  },
+  "contractName": "TestGuestList",
+  "coverageMap": {
+    "branches": {
+      "6": {
+        "TestGuestList.setGuests": {
+          "6": [
+            1205,
+            1229,
+            false
+          ]
+        }
+      }
+    },
+    "statements": {
+      "6": {
+        "TestGuestList.authorized": {
+          "0": [
+            1820,
+            1841
+          ]
+        },
+        "TestGuestList.setGuests": {
+          "1": [
+            1052,
+            1081
+          ],
+          "2": [
+            1091,
+            1132
+          ],
+          "3": [
+            1249,
+            1254
+          ],
+          "4": [
+            1282,
+            1314
+          ],
+          "5": [
+            1182,
+            1185
+          ]
+        }
+      }
+    }
+  },
+  "dependencies": [],
+  "deployedBytecode": "608060405234801561001057600080fd5b50600436106100575760003560e01c80630eda85ee1461005c5780635ed7660e1461008557806377f32f8414610098578063c5336835146100ad578063fbfa77cf146100c2575b600080fd5b61006f61006a36600461025c565b6100ca565b60405161007c9190610345565b60405180910390f35b61006f61009336600461027e565b6100df565b6100ab6100a63660046102a8565b610102565b005b6100b56101de565b60405161007c9190610331565b6100b56101ed565b60026020526000908152604090205460ff1681565b6001600160a01b03821660009081526002602052604090205460ff165b92915050565b6001546001600160a01b0316331461011657fe5b82811461011f57fe5b60005b838110156101d757600085858381811061013857fe5b905060200201602081019061014d919061025c565b6001600160a01b03161415610161576101d7565b82828281811061016d57fe5b90506020020160208101906101829190610311565b6002600087878581811061019257fe5b90506020020160208101906101a7919061025c565b6001600160a01b031681526020810191909152604001600020805460ff1916911515919091179055600101610122565b5050505050565b6001546001600160a01b031681565b6000546001600160a01b031681565b80356001600160a01b03811681146100fc57600080fd5b60008083601f840112610224578182fd5b50813567ffffffffffffffff81111561023b578182fd5b602083019150836020808302850101111561025557600080fd5b9250929050565b60006020828403121561026d578081fd5b61027783836101fc565b9392505050565b60008060408385031215610290578081fd5b61029a84846101fc565b946020939093013593505050565b600080600080604085870312156102bd578182fd5b843567ffffffffffffffff808211156102d4578384fd5b6102e088838901610213565b909650945060208701359150808211156102f8578384fd5b5061030587828801610213565b95989497509550505050565b600060208284031215610322578081fd5b81358015158114610277578182fd5b6001600160a01b0391909116815260200190565b90151581526020019056fea2646970667358221220b03d274660c925b9f4808bc63dea8056058bc74b823d8c710229b04fdf2f4f9a64736f6c634300060c0033",
+  "deployedSourceMap": "331:1519:6:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;414:38;;;;;;:::i;:::-;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;1728:120;;;;;;:::i;:::-;;:::i;960:371::-;;;;;;:::i;:::-;;:::i;:::-;;386:22;;;:::i;:::-;;;;;;;:::i;360:20::-;;;:::i;414:38::-;;;;;;;;;;;;;;;:::o;1728:120::-;-1:-1:-1;;;;;1827:14:6;;1804:4;1827:14;;;:6;:14;;;;;;;;1728:120;;;;;:::o;960:371::-;1073:7;;-1:-1:-1;;;;;1073:7:6;1059:10;:21;1052:29;;;;1098:33;;;1091:41;;;;1147:9;1142:183;1162:18;;;1142:183;;;1227:1;1205:7;;1213:1;1205:10;;;;;;;;;;;;;;;;;;;;:::i;:::-;-1:-1:-1;;;;;1205:24:6;;1201:68;;;1249:5;;1201:68;1303:8;;1312:1;1303:11;;;;;;;;;;;;;;;;;;;;:::i;:::-;1282:6;:18;1289:7;;1297:1;1289:10;;;;;;;;;;;;;;;;;;;;:::i;:::-;-1:-1:-1;;;;;1282:18:6;;;;;;;;;;;;-1:-1:-1;1282:18:6;:32;;-1:-1:-1;;1282:32:6;;;;;;;;;;-1:-1:-1;1182:3:6;1142:183;;;;960:371;;;;:::o;386:22::-;;;-1:-1:-1;;;;;386:22:6;;:::o;360:20::-;;;-1:-1:-1;;;;;360:20:6;;:::o;5:130:-1:-;72:20;;-1:-1;;;;;3631:54;;3835:35;;3825:2;;3884:1;;3874:12;160:352;;;290:3;283:4;275:6;271:17;267:27;257:2;;-1:-1;;298:12;257:2;-1:-1;328:20;;368:18;357:30;;354:2;;;-1:-1;;390:12;354:2;434:4;426:6;422:17;410:29;;485:3;434:4;;469:6;465:17;426:6;451:32;;448:41;445:2;;;502:1;;492:12;445:2;250:262;;;;;:::o;1160:241::-;;1264:2;1252:9;1243:7;1239:23;1235:32;1232:2;;;-1:-1;;1270:12;1232:2;1332:53;1377:7;1353:22;1332:53;:::i;:::-;1322:63;1226:175;-1:-1;;;1226:175::o;1408:366::-;;;1529:2;1517:9;1508:7;1504:23;1500:32;1497:2;;;-1:-1;;1535:12;1497:2;1597:53;1642:7;1618:22;1597:53;:::i;:::-;1587:63;1687:2;1726:22;;;;1090:20;;-1:-1;;;1491:283::o;1781:672::-;;;;;1969:2;1957:9;1948:7;1944:23;1940:32;1937:2;;;-1:-1;;1975:12;1937:2;2033:17;2020:31;2071:18;;2063:6;2060:30;2057:2;;;-1:-1;;2093:12;2057:2;2131:80;2203:7;2194:6;2183:9;2179:22;2131:80;:::i;:::-;2113:98;;-1:-1;2113:98;-1:-1;2276:2;2261:18;;2248:32;;-1:-1;2289:30;;;2286:2;;;-1:-1;;2322:12;2286:2;;2360:77;2429:7;2420:6;2409:9;2405:22;2360:77;:::i;:::-;1931:522;;;;-1:-1;2342:95;-1:-1;;;;1931:522::o;2460:235::-;;2561:2;2549:9;2540:7;2536:23;2532:32;2529:2;;;-1:-1;;2567:12;2529:2;969:6;956:20;3981:5;3543:13;3536:21;3959:5;3956:32;3946:2;;-1:-1;;3992:12;2933:222;-1:-1;;;;;3631:54;;;;2773:37;;3060:2;3045:18;;3031:124::o;3162:210::-;3543:13;;3536:21;2887:34;;3283:2;3268:18;;3254:118::o",
+  "language": "Solidity",
+  "natspec": {
+    "details": "For a Vyper implementation of this contract containing additional functionality, see https://github.com/banteg/guest-list/blob/master/contracts/GuestList.vy",
+    "kind": "dev",
+    "methods": {
+      "authorized(address,uint256)": {
+        "details": "Note that `_amount` isn't checked to keep test setup simple, since from the vault tests' perspective this is a pass/fail call anyway.",
+        "notice": "Check if a guest with a bag of a certain size is allowed into the party.",
+        "params": {
+          "_amount": "Not used. The amount of tokens the guest is bringing.",
+          "_guest": "The guest's address to check."
+        }
+      },
+      "constructor": {
+        "details": "Note that since this is just for testing, you're unable to change `bouncer`."
+      },
+      "setGuests(address[],bool[])": {
+        "notice": "Invite guests or kick them from the party.",
+        "params": {
+          "_guests": "The guests to add or update.",
+          "_invited": "A flag for each guest at the matching index, inviting or uninviting the guest."
+        }
+      }
+    },
+    "notice": "A basic guest list contract for testing.",
+    "version": 1
+  },
+  "offset": [
+    331,
+    1850
+  ],
+  "opcodes": "PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH2 0x10 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP PUSH1 0x4 CALLDATASIZE LT PUSH2 0x57 JUMPI PUSH1 0x0 CALLDATALOAD PUSH1 0xE0 SHR DUP1 PUSH4 0xEDA85EE EQ PUSH2 0x5C JUMPI DUP1 PUSH4 0x5ED7660E EQ PUSH2 0x85 JUMPI DUP1 PUSH4 0x77F32F84 EQ PUSH2 0x98 JUMPI DUP1 PUSH4 0xC5336835 EQ PUSH2 0xAD JUMPI DUP1 PUSH4 0xFBFA77CF EQ PUSH2 0xC2 JUMPI JUMPDEST PUSH1 0x0 DUP1 REVERT JUMPDEST PUSH2 0x6F PUSH2 0x6A CALLDATASIZE PUSH1 0x4 PUSH2 0x25C JUMP JUMPDEST PUSH2 0xCA JUMP JUMPDEST PUSH1 0x40 MLOAD PUSH2 0x7C SWAP2 SWAP1 PUSH2 0x345 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0x6F PUSH2 0x93 CALLDATASIZE PUSH1 0x4 PUSH2 0x27E JUMP JUMPDEST PUSH2 0xDF JUMP JUMPDEST PUSH2 0xAB PUSH2 0xA6 CALLDATASIZE PUSH1 0x4 PUSH2 0x2A8 JUMP JUMPDEST PUSH2 0x102 JUMP JUMPDEST STOP JUMPDEST PUSH2 0xB5 PUSH2 0x1DE JUMP JUMPDEST PUSH1 0x40 MLOAD PUSH2 0x7C SWAP2 SWAP1 PUSH2 0x331 JUMP JUMPDEST PUSH2 0xB5 PUSH2 0x1ED JUMP JUMPDEST PUSH1 0x2 PUSH1 0x20 MSTORE PUSH1 0x0 SWAP1 DUP2 MSTORE PUSH1 0x40 SWAP1 KECCAK256 SLOAD PUSH1 0xFF AND DUP2 JUMP JUMPDEST PUSH1 0x1 PUSH1 0x1 PUSH1 0xA0 SHL SUB DUP3 AND PUSH1 0x0 SWAP1 DUP2 MSTORE PUSH1 0x2 PUSH1 0x20 MSTORE PUSH1 0x40 SWAP1 KECCAK256 SLOAD PUSH1 0xFF AND JUMPDEST SWAP3 SWAP2 POP POP JUMP JUMPDEST PUSH1 0x1 SLOAD PUSH1 0x1 PUSH1 0x1 PUSH1 0xA0 SHL SUB AND CALLER EQ PUSH2 0x116 JUMPI INVALID JUMPDEST DUP3 DUP2 EQ PUSH2 0x11F JUMPI INVALID JUMPDEST PUSH1 0x0 JUMPDEST DUP4 DUP2 LT ISZERO PUSH2 0x1D7 JUMPI PUSH1 0x0 DUP6 DUP6 DUP4 DUP2 DUP2 LT PUSH2 0x138 JUMPI INVALID JUMPDEST SWAP1 POP PUSH1 0x20 MUL ADD PUSH1 0x20 DUP2 ADD SWAP1 PUSH2 0x14D SWAP2 SWAP1 PUSH2 0x25C JUMP JUMPDEST PUSH1 0x1 PUSH1 0x1 PUSH1 0xA0 SHL SUB AND EQ ISZERO PUSH2 0x161 JUMPI PUSH2 0x1D7 JUMP JUMPDEST DUP3 DUP3 DUP3 DUP2 DUP2 LT PUSH2 0x16D JUMPI INVALID JUMPDEST SWAP1 POP PUSH1 0x20 MUL ADD PUSH1 0x20 DUP2 ADD SWAP1 PUSH2 0x182 SWAP2 SWAP1 PUSH2 0x311 JUMP JUMPDEST PUSH1 0x2 PUSH1 0x0 DUP8 DUP8 DUP6 DUP2 DUP2 LT PUSH2 0x192 JUMPI INVALID JUMPDEST SWAP1 POP PUSH1 0x20 MUL ADD PUSH1 0x20 DUP2 ADD SWAP1 PUSH2 0x1A7 SWAP2 SWAP1 PUSH2 0x25C JUMP JUMPDEST PUSH1 0x1 PUSH1 0x1 PUSH1 0xA0 SHL SUB AND DUP2 MSTORE PUSH1 0x20 DUP2 ADD SWAP2 SWAP1 SWAP2 MSTORE PUSH1 0x40 ADD PUSH1 0x0 KECCAK256 DUP1 SLOAD PUSH1 0xFF NOT AND SWAP2 ISZERO ISZERO SWAP2 SWAP1 SWAP2 OR SWAP1 SSTORE PUSH1 0x1 ADD PUSH2 0x122 JUMP JUMPDEST POP POP POP POP POP JUMP JUMPDEST PUSH1 0x1 SLOAD PUSH1 0x1 PUSH1 0x1 PUSH1 0xA0 SHL SUB AND DUP2 JUMP JUMPDEST PUSH1 0x0 SLOAD PUSH1 0x1 PUSH1 0x1 PUSH1 0xA0 SHL SUB AND DUP2 JUMP JUMPDEST DUP1 CALLDATALOAD PUSH1 0x1 PUSH1 0x1 PUSH1 0xA0 SHL SUB DUP2 AND DUP2 EQ PUSH2 0xFC JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST PUSH1 0x0 DUP1 DUP4 PUSH1 0x1F DUP5 ADD SLT PUSH2 0x224 JUMPI DUP2 DUP3 REVERT JUMPDEST POP DUP2 CALLDATALOAD PUSH8 0xFFFFFFFFFFFFFFFF DUP2 GT ISZERO PUSH2 0x23B JUMPI DUP2 DUP3 REVERT JUMPDEST PUSH1 0x20 DUP4 ADD SWAP2 POP DUP4 PUSH1 0x20 DUP1 DUP4 MUL DUP6 ADD ADD GT ISZERO PUSH2 0x255 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST SWAP3 POP SWAP3 SWAP1 POP JUMP JUMPDEST PUSH1 0x0 PUSH1 0x20 DUP3 DUP5 SUB SLT ISZERO PUSH2 0x26D JUMPI DUP1 DUP2 REVERT JUMPDEST PUSH2 0x277 DUP4 DUP4 PUSH2 0x1FC JUMP JUMPDEST SWAP4 SWAP3 POP POP POP JUMP JUMPDEST PUSH1 0x0 DUP1 PUSH1 0x40 DUP4 DUP6 SUB SLT ISZERO PUSH2 0x290 JUMPI DUP1 DUP2 REVERT JUMPDEST PUSH2 0x29A DUP5 DUP5 PUSH2 0x1FC JUMP JUMPDEST SWAP5 PUSH1 0x20 SWAP4 SWAP1 SWAP4 ADD CALLDATALOAD SWAP4 POP POP POP JUMP JUMPDEST PUSH1 0x0 DUP1 PUSH1 0x0 DUP1 PUSH1 0x40 DUP6 DUP8 SUB SLT ISZERO PUSH2 0x2BD JUMPI DUP2 DUP3 REVERT JUMPDEST DUP5 CALLDATALOAD PUSH8 0xFFFFFFFFFFFFFFFF DUP1 DUP3 GT ISZERO PUSH2 0x2D4 JUMPI DUP4 DUP5 REVERT JUMPDEST PUSH2 0x2E0 DUP9 DUP4 DUP10 ADD PUSH2 0x213 JUMP JUMPDEST SWAP1 SWAP7 POP SWAP5 POP PUSH1 0x20 DUP8 ADD CALLDATALOAD SWAP2 POP DUP1 DUP3 GT ISZERO PUSH2 0x2F8 JUMPI DUP4 DUP5 REVERT JUMPDEST POP PUSH2 0x305 DUP8 DUP3 DUP9 ADD PUSH2 0x213 JUMP JUMPDEST SWAP6 SWAP9 SWAP5 SWAP8 POP SWAP6 POP POP POP POP JUMP JUMPDEST PUSH1 0x0 PUSH1 0x20 DUP3 DUP5 SUB SLT ISZERO PUSH2 0x322 JUMPI DUP1 DUP2 REVERT JUMPDEST DUP2 CALLDATALOAD DUP1 ISZERO ISZERO DUP2 EQ PUSH2 0x277 JUMPI DUP2 DUP3 REVERT JUMPDEST PUSH1 0x1 PUSH1 0x1 PUSH1 0xA0 SHL SUB SWAP2 SWAP1 SWAP2 AND DUP2 MSTORE PUSH1 0x20 ADD SWAP1 JUMP JUMPDEST SWAP1 ISZERO ISZERO DUP2 MSTORE PUSH1 0x20 ADD SWAP1 JUMP INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 0xB0 RETURNDATASIZE 0x27 CHAINID PUSH1 0xC9 0x25 0xB9 DELEGATECALL DUP1 DUP12 0xC6 RETURNDATASIZE 0xEA DUP1 JUMP SDIV DUP12 0xC7 0x4B DUP3 RETURNDATASIZE DUP13 PUSH18 0x229B04FDF2F4F9A64736F6C634300060C00 CALLER ",
+  "pcMap": {
+    "0": {
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x80"
+    },
+    "2": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x40"
+    },
+    "4": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "MSTORE",
+      "path": "6"
+    },
+    "5": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "CALLVALUE",
+      "path": "6"
+    },
+    "6": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "DUP1",
+      "path": "6"
+    },
+    "7": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "ISZERO",
+      "path": "6"
+    },
+    "8": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x10"
+    },
+    "11": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "JUMPI",
+      "path": "6"
+    },
+    "12": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x0"
+    },
+    "14": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "DUP1",
+      "path": "6"
+    },
+    "15": {
+      "dev": "Cannot send ether to nonpayable function",
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "REVERT",
+      "path": "6"
+    },
+    "16": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "17": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "POP",
+      "path": "6"
+    },
+    "18": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x4"
+    },
+    "20": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "CALLDATASIZE",
+      "path": "6"
+    },
+    "21": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "LT",
+      "path": "6"
+    },
+    "22": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x57"
+    },
+    "25": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "JUMPI",
+      "path": "6"
+    },
+    "26": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x0"
+    },
+    "28": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "CALLDATALOAD",
+      "path": "6"
+    },
+    "29": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0xE0"
+    },
+    "31": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "SHR",
+      "path": "6"
+    },
+    "32": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "DUP1",
+      "path": "6"
+    },
+    "33": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "PUSH4",
+      "path": "6",
+      "value": "0xEDA85EE"
+    },
+    "38": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "EQ",
+      "path": "6"
+    },
+    "39": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x5C"
+    },
+    "42": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "JUMPI",
+      "path": "6"
+    },
+    "43": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "DUP1",
+      "path": "6"
+    },
+    "44": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "PUSH4",
+      "path": "6",
+      "value": "0x5ED7660E"
+    },
+    "49": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "EQ",
+      "path": "6"
+    },
+    "50": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x85"
+    },
+    "53": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "JUMPI",
+      "path": "6"
+    },
+    "54": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "DUP1",
+      "path": "6"
+    },
+    "55": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "PUSH4",
+      "path": "6",
+      "value": "0x77F32F84"
+    },
+    "60": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "EQ",
+      "path": "6"
+    },
+    "61": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x98"
+    },
+    "64": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "JUMPI",
+      "path": "6"
+    },
+    "65": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "DUP1",
+      "path": "6"
+    },
+    "66": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "PUSH4",
+      "path": "6",
+      "value": "0xC5336835"
+    },
+    "71": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "EQ",
+      "path": "6"
+    },
+    "72": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0xAD"
+    },
+    "75": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "JUMPI",
+      "path": "6"
+    },
+    "76": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "DUP1",
+      "path": "6"
+    },
+    "77": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "PUSH4",
+      "path": "6",
+      "value": "0xFBFA77CF"
+    },
+    "82": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "EQ",
+      "path": "6"
+    },
+    "83": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0xC2"
+    },
+    "86": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "JUMPI",
+      "path": "6"
+    },
+    "87": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "88": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x0"
+    },
+    "90": {
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "DUP1",
+      "path": "6"
+    },
+    "91": {
+      "first_revert": true,
+      "fn": null,
+      "offset": [
+        331,
+        1850
+      ],
+      "op": "REVERT",
+      "path": "6"
+    },
+    "92": {
+      "offset": [
+        414,
+        452
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "93": {
+      "fn": null,
+      "offset": [
+        414,
+        452
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x6F"
+    },
+    "96": {
+      "fn": null,
+      "offset": [
+        414,
+        452
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x6A"
+    },
+    "99": {
+      "fn": null,
+      "offset": [
+        414,
+        452
+      ],
+      "op": "CALLDATASIZE",
+      "path": "6"
+    },
+    "100": {
+      "fn": null,
+      "offset": [
+        414,
+        452
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x4"
+    },
+    "102": {
+      "fn": null,
+      "offset": [
+        414,
+        452
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x25C"
+    },
+    "105": {
+      "fn": null,
+      "jump": "i",
+      "offset": [
+        414,
+        452
+      ],
+      "op": "JUMP",
+      "path": "6"
+    },
+    "106": {
+      "fn": null,
+      "offset": [
+        414,
+        452
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "107": {
+      "fn": null,
+      "offset": [
+        414,
+        452
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0xCA"
+    },
+    "110": {
+      "fn": null,
+      "jump": "i",
+      "offset": [
+        414,
+        452
+      ],
+      "op": "JUMP",
+      "path": "6"
+    },
+    "111": {
+      "fn": null,
+      "offset": [
+        414,
+        452
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "112": {
+      "fn": null,
+      "offset": [
+        414,
+        452
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x40"
+    },
+    "114": {
+      "fn": null,
+      "offset": [
+        414,
+        452
+      ],
+      "op": "MLOAD",
+      "path": "6"
+    },
+    "115": {
+      "fn": null,
+      "offset": [
+        414,
+        452
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x7C"
+    },
+    "118": {
+      "fn": null,
+      "offset": [
+        414,
+        452
+      ],
+      "op": "SWAP2",
+      "path": "6"
+    },
+    "119": {
+      "fn": null,
+      "offset": [
+        414,
+        452
+      ],
+      "op": "SWAP1",
+      "path": "6"
+    },
+    "120": {
+      "fn": null,
+      "offset": [
+        414,
+        452
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x345"
+    },
+    "123": {
+      "fn": null,
+      "jump": "i",
+      "offset": [
+        414,
+        452
+      ],
+      "op": "JUMP",
+      "path": "6"
+    },
+    "124": {
+      "fn": null,
+      "offset": [
+        414,
+        452
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "125": {
+      "fn": null,
+      "offset": [
+        414,
+        452
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x40"
+    },
+    "127": {
+      "fn": null,
+      "offset": [
+        414,
+        452
+      ],
+      "op": "MLOAD",
+      "path": "6"
+    },
+    "128": {
+      "fn": null,
+      "offset": [
+        414,
+        452
+      ],
+      "op": "DUP1",
+      "path": "6"
+    },
+    "129": {
+      "fn": null,
+      "offset": [
+        414,
+        452
+      ],
+      "op": "SWAP2",
+      "path": "6"
+    },
+    "130": {
+      "fn": null,
+      "offset": [
+        414,
+        452
+      ],
+      "op": "SUB",
+      "path": "6"
+    },
+    "131": {
+      "fn": null,
+      "offset": [
+        414,
+        452
+      ],
+      "op": "SWAP1",
+      "path": "6"
+    },
+    "132": {
+      "fn": null,
+      "offset": [
+        414,
+        452
+      ],
+      "op": "RETURN",
+      "path": "6"
+    },
+    "133": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1728,
+        1848
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "134": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1728,
+        1848
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x6F"
+    },
+    "137": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1728,
+        1848
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x93"
+    },
+    "140": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1728,
+        1848
+      ],
+      "op": "CALLDATASIZE",
+      "path": "6"
+    },
+    "141": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1728,
+        1848
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x4"
+    },
+    "143": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1728,
+        1848
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x27E"
+    },
+    "146": {
+      "fn": "TestGuestList.authorized",
+      "jump": "i",
+      "offset": [
+        1728,
+        1848
+      ],
+      "op": "JUMP",
+      "path": "6"
+    },
+    "147": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1728,
+        1848
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "148": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1728,
+        1848
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0xDF"
+    },
+    "151": {
+      "fn": "TestGuestList.authorized",
+      "jump": "i",
+      "offset": [
+        1728,
+        1848
+      ],
+      "op": "JUMP",
+      "path": "6"
+    },
+    "152": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        960,
+        1331
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "153": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        960,
+        1331
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0xAB"
+    },
+    "156": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        960,
+        1331
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0xA6"
+    },
+    "159": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        960,
+        1331
+      ],
+      "op": "CALLDATASIZE",
+      "path": "6"
+    },
+    "160": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        960,
+        1331
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x4"
+    },
+    "162": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        960,
+        1331
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x2A8"
+    },
+    "165": {
+      "fn": "TestGuestList.setGuests",
+      "jump": "i",
+      "offset": [
+        960,
+        1331
+      ],
+      "op": "JUMP",
+      "path": "6"
+    },
+    "166": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        960,
+        1331
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "167": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        960,
+        1331
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x102"
+    },
+    "170": {
+      "fn": "TestGuestList.setGuests",
+      "jump": "i",
+      "offset": [
+        960,
+        1331
+      ],
+      "op": "JUMP",
+      "path": "6"
+    },
+    "171": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        960,
+        1331
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "172": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        960,
+        1331
+      ],
+      "op": "STOP",
+      "path": "6"
+    },
+    "173": {
+      "offset": [
+        386,
+        408
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "174": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        386,
+        408
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0xB5"
+    },
+    "177": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        386,
+        408
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x1DE"
+    },
+    "180": {
+      "fn": "TestGuestList.setGuests",
+      "jump": "i",
+      "offset": [
+        386,
+        408
+      ],
+      "op": "JUMP",
+      "path": "6"
+    },
+    "181": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        386,
+        408
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "182": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        386,
+        408
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x40"
+    },
+    "184": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        386,
+        408
+      ],
+      "op": "MLOAD",
+      "path": "6"
+    },
+    "185": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        386,
+        408
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x7C"
+    },
+    "188": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        386,
+        408
+      ],
+      "op": "SWAP2",
+      "path": "6"
+    },
+    "189": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        386,
+        408
+      ],
+      "op": "SWAP1",
+      "path": "6"
+    },
+    "190": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        386,
+        408
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x331"
+    },
+    "193": {
+      "fn": "TestGuestList.setGuests",
+      "jump": "i",
+      "offset": [
+        386,
+        408
+      ],
+      "op": "JUMP",
+      "path": "6"
+    },
+    "194": {
+      "offset": [
+        360,
+        380
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "195": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        360,
+        380
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0xB5"
+    },
+    "198": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        360,
+        380
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x1ED"
+    },
+    "201": {
+      "fn": "TestGuestList.setGuests",
+      "jump": "i",
+      "offset": [
+        360,
+        380
+      ],
+      "op": "JUMP",
+      "path": "6"
+    },
+    "202": {
+      "offset": [
+        414,
+        452
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "203": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        414,
+        452
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x2"
+    },
+    "205": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        414,
+        452
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x20"
+    },
+    "207": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        414,
+        452
+      ],
+      "op": "MSTORE",
+      "path": "6"
+    },
+    "208": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        414,
+        452
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x0"
+    },
+    "210": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        414,
+        452
+      ],
+      "op": "SWAP1",
+      "path": "6"
+    },
+    "211": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        414,
+        452
+      ],
+      "op": "DUP2",
+      "path": "6"
+    },
+    "212": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        414,
+        452
+      ],
+      "op": "MSTORE",
+      "path": "6"
+    },
+    "213": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        414,
+        452
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x40"
+    },
+    "215": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        414,
+        452
+      ],
+      "op": "SWAP1",
+      "path": "6"
+    },
+    "216": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        414,
+        452
+      ],
+      "op": "KECCAK256",
+      "path": "6"
+    },
+    "217": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        414,
+        452
+      ],
+      "op": "SLOAD",
+      "path": "6"
+    },
+    "218": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        414,
+        452
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0xFF"
+    },
+    "220": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        414,
+        452
+      ],
+      "op": "AND",
+      "path": "6"
+    },
+    "221": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        414,
+        452
+      ],
+      "op": "DUP2",
+      "path": "6"
+    },
+    "222": {
+      "fn": "TestGuestList.setGuests",
+      "jump": "o",
+      "offset": [
+        414,
+        452
+      ],
+      "op": "JUMP",
+      "path": "6"
+    },
+    "223": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1728,
+        1848
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "224": {
+      "op": "PUSH1",
+      "value": "0x1"
+    },
+    "226": {
+      "op": "PUSH1",
+      "value": "0x1"
+    },
+    "228": {
+      "op": "PUSH1",
+      "value": "0xA0"
+    },
+    "230": {
+      "op": "SHL"
+    },
+    "231": {
+      "op": "SUB"
+    },
+    "232": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1827,
+        1841
+      ],
+      "op": "DUP3",
+      "path": "6",
+      "statement": 0
+    },
+    "233": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1827,
+        1841
+      ],
+      "op": "AND",
+      "path": "6"
+    },
+    "234": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1804,
+        1808
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x0"
+    },
+    "236": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1827,
+        1841
+      ],
+      "op": "SWAP1",
+      "path": "6"
+    },
+    "237": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1827,
+        1841
+      ],
+      "op": "DUP2",
+      "path": "6"
+    },
+    "238": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1827,
+        1841
+      ],
+      "op": "MSTORE",
+      "path": "6"
+    },
+    "239": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1827,
+        1833
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x2"
+    },
+    "241": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1827,
+        1841
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x20"
+    },
+    "243": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1827,
+        1841
+      ],
+      "op": "MSTORE",
+      "path": "6"
+    },
+    "244": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1827,
+        1841
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x40"
+    },
+    "246": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1827,
+        1841
+      ],
+      "op": "SWAP1",
+      "path": "6"
+    },
+    "247": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1827,
+        1841
+      ],
+      "op": "KECCAK256",
+      "path": "6"
+    },
+    "248": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1827,
+        1841
+      ],
+      "op": "SLOAD",
+      "path": "6"
+    },
+    "249": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1827,
+        1841
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0xFF"
+    },
+    "251": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1827,
+        1841
+      ],
+      "op": "AND",
+      "path": "6"
+    },
+    "252": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1728,
+        1848
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "253": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1728,
+        1848
+      ],
+      "op": "SWAP3",
+      "path": "6"
+    },
+    "254": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1728,
+        1848
+      ],
+      "op": "SWAP2",
+      "path": "6"
+    },
+    "255": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1728,
+        1848
+      ],
+      "op": "POP",
+      "path": "6"
+    },
+    "256": {
+      "fn": "TestGuestList.authorized",
+      "offset": [
+        1728,
+        1848
+      ],
+      "op": "POP",
+      "path": "6"
+    },
+    "257": {
+      "fn": "TestGuestList.authorized",
+      "jump": "o",
+      "offset": [
+        1728,
+        1848
+      ],
+      "op": "JUMP",
+      "path": "6"
+    },
+    "258": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        960,
+        1331
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "259": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1073,
+        1080
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "statement": 1,
+      "value": "0x1"
+    },
+    "261": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1073,
+        1080
+      ],
+      "op": "SLOAD",
+      "path": "6"
+    },
+    "262": {
+      "op": "PUSH1",
+      "value": "0x1"
+    },
+    "264": {
+      "op": "PUSH1",
+      "value": "0x1"
+    },
+    "266": {
+      "op": "PUSH1",
+      "value": "0xA0"
+    },
+    "268": {
+      "op": "SHL"
+    },
+    "269": {
+      "op": "SUB"
+    },
+    "270": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1073,
+        1080
+      ],
+      "op": "AND",
+      "path": "6"
+    },
+    "271": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1059,
+        1069
+      ],
+      "op": "CALLER",
+      "path": "6"
+    },
+    "272": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1059,
+        1080
+      ],
+      "op": "EQ",
+      "path": "6"
+    },
+    "273": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1052,
+        1081
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x116"
+    },
+    "276": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1052,
+        1081
+      ],
+      "op": "JUMPI",
+      "path": "6"
+    },
+    "277": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1052,
+        1081
+      ],
+      "op": "INVALID",
+      "path": "6"
+    },
+    "278": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1052,
+        1081
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "279": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1098,
+        1131
+      ],
+      "op": "DUP3",
+      "path": "6",
+      "statement": 2
+    },
+    "280": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1098,
+        1131
+      ],
+      "op": "DUP2",
+      "path": "6"
+    },
+    "281": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1098,
+        1131
+      ],
+      "op": "EQ",
+      "path": "6"
+    },
+    "282": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1091,
+        1132
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x11F"
+    },
+    "285": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1091,
+        1132
+      ],
+      "op": "JUMPI",
+      "path": "6"
+    },
+    "286": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1091,
+        1132
+      ],
+      "op": "INVALID",
+      "path": "6"
+    },
+    "287": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1091,
+        1132
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "288": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1147,
+        1156
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x0"
+    },
+    "290": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1142,
+        1325
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "291": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1162,
+        1180
+      ],
+      "op": "DUP4",
+      "path": "6"
+    },
+    "292": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1162,
+        1180
+      ],
+      "op": "DUP2",
+      "path": "6"
+    },
+    "293": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1162,
+        1180
+      ],
+      "op": "LT",
+      "path": "6"
+    },
+    "294": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1142,
+        1325
+      ],
+      "op": "ISZERO",
+      "path": "6"
+    },
+    "295": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1142,
+        1325
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x1D7"
+    },
+    "298": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1142,
+        1325
+      ],
+      "op": "JUMPI",
+      "path": "6"
+    },
+    "299": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1227,
+        1228
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x0"
+    },
+    "301": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1212
+      ],
+      "op": "DUP6",
+      "path": "6"
+    },
+    "302": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1212
+      ],
+      "op": "DUP6",
+      "path": "6"
+    },
+    "303": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1213,
+        1214
+      ],
+      "op": "DUP4",
+      "path": "6"
+    },
+    "304": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1215
+      ],
+      "op": "DUP2",
+      "path": "6"
+    },
+    "305": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1215
+      ],
+      "op": "DUP2",
+      "path": "6"
+    },
+    "306": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1215
+      ],
+      "op": "LT",
+      "path": "6"
+    },
+    "307": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1215
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x138"
+    },
+    "310": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1215
+      ],
+      "op": "JUMPI",
+      "path": "6"
+    },
+    "311": {
+      "dev": "Index out of range",
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1215
+      ],
+      "op": "INVALID",
+      "path": "6"
+    },
+    "312": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1215
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "313": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1215
+      ],
+      "op": "SWAP1",
+      "path": "6"
+    },
+    "314": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1215
+      ],
+      "op": "POP",
+      "path": "6"
+    },
+    "315": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1215
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x20"
+    },
+    "317": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1215
+      ],
+      "op": "MUL",
+      "path": "6"
+    },
+    "318": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1215
+      ],
+      "op": "ADD",
+      "path": "6"
+    },
+    "319": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1215
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x20"
+    },
+    "321": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1215
+      ],
+      "op": "DUP2",
+      "path": "6"
+    },
+    "322": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1215
+      ],
+      "op": "ADD",
+      "path": "6"
+    },
+    "323": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1215
+      ],
+      "op": "SWAP1",
+      "path": "6"
+    },
+    "324": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1215
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x14D"
+    },
+    "327": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1215
+      ],
+      "op": "SWAP2",
+      "path": "6"
+    },
+    "328": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1215
+      ],
+      "op": "SWAP1",
+      "path": "6"
+    },
+    "329": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1215
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x25C"
+    },
+    "332": {
+      "fn": "TestGuestList.setGuests",
+      "jump": "i",
+      "offset": [
+        1205,
+        1215
+      ],
+      "op": "JUMP",
+      "path": "6"
+    },
+    "333": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1215
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "334": {
+      "op": "PUSH1",
+      "value": "0x1"
+    },
+    "336": {
+      "op": "PUSH1",
+      "value": "0x1"
+    },
+    "338": {
+      "op": "PUSH1",
+      "value": "0xA0"
+    },
+    "340": {
+      "op": "SHL"
+    },
+    "341": {
+      "op": "SUB"
+    },
+    "342": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1229
+      ],
+      "op": "AND",
+      "path": "6"
+    },
+    "343": {
+      "branch": 6,
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1205,
+        1229
+      ],
+      "op": "EQ",
+      "path": "6"
+    },
+    "344": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1201,
+        1269
+      ],
+      "op": "ISZERO",
+      "path": "6"
+    },
+    "345": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1201,
+        1269
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x161"
+    },
+    "348": {
+      "branch": 6,
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1201,
+        1269
+      ],
+      "op": "JUMPI",
+      "path": "6"
+    },
+    "349": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1249,
+        1254
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "statement": 3,
+      "value": "0x1D7"
+    },
+    "352": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1249,
+        1254
+      ],
+      "op": "JUMP",
+      "path": "6"
+    },
+    "353": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1201,
+        1269
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "354": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1303,
+        1311
+      ],
+      "op": "DUP3",
+      "path": "6",
+      "statement": 4
+    },
+    "355": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1303,
+        1311
+      ],
+      "op": "DUP3",
+      "path": "6"
+    },
+    "356": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1312,
+        1313
+      ],
+      "op": "DUP3",
+      "path": "6"
+    },
+    "357": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1303,
+        1314
+      ],
+      "op": "DUP2",
+      "path": "6"
+    },
+    "358": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1303,
+        1314
+      ],
+      "op": "DUP2",
+      "path": "6"
+    },
+    "359": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1303,
+        1314
+      ],
+      "op": "LT",
+      "path": "6"
+    },
+    "360": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1303,
+        1314
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x16D"
+    },
+    "363": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1303,
+        1314
+      ],
+      "op": "JUMPI",
+      "path": "6"
+    },
+    "364": {
+      "dev": "Index out of range",
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1303,
+        1314
+      ],
+      "op": "INVALID",
+      "path": "6"
+    },
+    "365": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1303,
+        1314
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "366": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1303,
+        1314
+      ],
+      "op": "SWAP1",
+      "path": "6"
+    },
+    "367": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1303,
+        1314
+      ],
+      "op": "POP",
+      "path": "6"
+    },
+    "368": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1303,
+        1314
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x20"
+    },
+    "370": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1303,
+        1314
+      ],
+      "op": "MUL",
+      "path": "6"
+    },
+    "371": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1303,
+        1314
+      ],
+      "op": "ADD",
+      "path": "6"
+    },
+    "372": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1303,
+        1314
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x20"
+    },
+    "374": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1303,
+        1314
+      ],
+      "op": "DUP2",
+      "path": "6"
+    },
+    "375": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1303,
+        1314
+      ],
+      "op": "ADD",
+      "path": "6"
+    },
+    "376": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1303,
+        1314
+      ],
+      "op": "SWAP1",
+      "path": "6"
+    },
+    "377": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1303,
+        1314
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x182"
+    },
+    "380": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1303,
+        1314
+      ],
+      "op": "SWAP2",
+      "path": "6"
+    },
+    "381": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1303,
+        1314
+      ],
+      "op": "SWAP1",
+      "path": "6"
+    },
+    "382": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1303,
+        1314
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x311"
+    },
+    "385": {
+      "fn": "TestGuestList.setGuests",
+      "jump": "i",
+      "offset": [
+        1303,
+        1314
+      ],
+      "op": "JUMP",
+      "path": "6"
+    },
+    "386": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1303,
+        1314
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "387": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1288
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x2"
+    },
+    "389": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1300
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x0"
+    },
+    "391": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1289,
+        1296
+      ],
+      "op": "DUP8",
+      "path": "6"
+    },
+    "392": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1289,
+        1296
+      ],
+      "op": "DUP8",
+      "path": "6"
+    },
+    "393": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1297,
+        1298
+      ],
+      "op": "DUP6",
+      "path": "6"
+    },
+    "394": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1289,
+        1299
+      ],
+      "op": "DUP2",
+      "path": "6"
+    },
+    "395": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1289,
+        1299
+      ],
+      "op": "DUP2",
+      "path": "6"
+    },
+    "396": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1289,
+        1299
+      ],
+      "op": "LT",
+      "path": "6"
+    },
+    "397": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1289,
+        1299
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x192"
+    },
+    "400": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1289,
+        1299
+      ],
+      "op": "JUMPI",
+      "path": "6"
+    },
+    "401": {
+      "dev": "Index out of range",
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1289,
+        1299
+      ],
+      "op": "INVALID",
+      "path": "6"
+    },
+    "402": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1289,
+        1299
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "403": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1289,
+        1299
+      ],
+      "op": "SWAP1",
+      "path": "6"
+    },
+    "404": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1289,
+        1299
+      ],
+      "op": "POP",
+      "path": "6"
+    },
+    "405": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1289,
+        1299
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x20"
+    },
+    "407": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1289,
+        1299
+      ],
+      "op": "MUL",
+      "path": "6"
+    },
+    "408": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1289,
+        1299
+      ],
+      "op": "ADD",
+      "path": "6"
+    },
+    "409": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1289,
+        1299
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x20"
+    },
+    "411": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1289,
+        1299
+      ],
+      "op": "DUP2",
+      "path": "6"
+    },
+    "412": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1289,
+        1299
+      ],
+      "op": "ADD",
+      "path": "6"
+    },
+    "413": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1289,
+        1299
+      ],
+      "op": "SWAP1",
+      "path": "6"
+    },
+    "414": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1289,
+        1299
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x1A7"
+    },
+    "417": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1289,
+        1299
+      ],
+      "op": "SWAP2",
+      "path": "6"
+    },
+    "418": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1289,
+        1299
+      ],
+      "op": "SWAP1",
+      "path": "6"
+    },
+    "419": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1289,
+        1299
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x25C"
+    },
+    "422": {
+      "fn": "TestGuestList.setGuests",
+      "jump": "i",
+      "offset": [
+        1289,
+        1299
+      ],
+      "op": "JUMP",
+      "path": "6"
+    },
+    "423": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1289,
+        1299
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "424": {
+      "op": "PUSH1",
+      "value": "0x1"
+    },
+    "426": {
+      "op": "PUSH1",
+      "value": "0x1"
+    },
+    "428": {
+      "op": "PUSH1",
+      "value": "0xA0"
+    },
+    "430": {
+      "op": "SHL"
+    },
+    "431": {
+      "op": "SUB"
+    },
+    "432": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1300
+      ],
+      "op": "AND",
+      "path": "6"
+    },
+    "433": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1300
+      ],
+      "op": "DUP2",
+      "path": "6"
+    },
+    "434": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1300
+      ],
+      "op": "MSTORE",
+      "path": "6"
+    },
+    "435": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1300
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x20"
+    },
+    "437": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1300
+      ],
+      "op": "DUP2",
+      "path": "6"
+    },
+    "438": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1300
+      ],
+      "op": "ADD",
+      "path": "6"
+    },
+    "439": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1300
+      ],
+      "op": "SWAP2",
+      "path": "6"
+    },
+    "440": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1300
+      ],
+      "op": "SWAP1",
+      "path": "6"
+    },
+    "441": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1300
+      ],
+      "op": "SWAP2",
+      "path": "6"
+    },
+    "442": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1300
+      ],
+      "op": "MSTORE",
+      "path": "6"
+    },
+    "443": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1300
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x40"
+    },
+    "445": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1300
+      ],
+      "op": "ADD",
+      "path": "6"
+    },
+    "446": {
+      "op": "PUSH1",
+      "value": "0x0"
+    },
+    "448": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1300
+      ],
+      "op": "KECCAK256",
+      "path": "6"
+    },
+    "449": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1314
+      ],
+      "op": "DUP1",
+      "path": "6"
+    },
+    "450": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1314
+      ],
+      "op": "SLOAD",
+      "path": "6"
+    },
+    "451": {
+      "op": "PUSH1",
+      "value": "0xFF"
+    },
+    "453": {
+      "op": "NOT"
+    },
+    "454": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1314
+      ],
+      "op": "AND",
+      "path": "6"
+    },
+    "455": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1314
+      ],
+      "op": "SWAP2",
+      "path": "6"
+    },
+    "456": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1314
+      ],
+      "op": "ISZERO",
+      "path": "6"
+    },
+    "457": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1314
+      ],
+      "op": "ISZERO",
+      "path": "6"
+    },
+    "458": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1314
+      ],
+      "op": "SWAP2",
+      "path": "6"
+    },
+    "459": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1314
+      ],
+      "op": "SWAP1",
+      "path": "6"
+    },
+    "460": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1314
+      ],
+      "op": "SWAP2",
+      "path": "6"
+    },
+    "461": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1314
+      ],
+      "op": "OR",
+      "path": "6"
+    },
+    "462": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1314
+      ],
+      "op": "SWAP1",
+      "path": "6"
+    },
+    "463": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1282,
+        1314
+      ],
+      "op": "SSTORE",
+      "path": "6"
+    },
+    "464": {
+      "op": "PUSH1",
+      "value": "0x1"
+    },
+    "466": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1182,
+        1185
+      ],
+      "op": "ADD",
+      "path": "6",
+      "statement": 5
+    },
+    "467": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1142,
+        1325
+      ],
+      "op": "PUSH2",
+      "path": "6",
+      "value": "0x122"
+    },
+    "470": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1142,
+        1325
+      ],
+      "op": "JUMP",
+      "path": "6"
+    },
+    "471": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1142,
+        1325
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "472": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        1142,
+        1325
+      ],
+      "op": "POP",
+      "path": "6"
+    },
+    "473": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        960,
+        1331
+      ],
+      "op": "POP",
+      "path": "6"
+    },
+    "474": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        960,
+        1331
+      ],
+      "op": "POP",
+      "path": "6"
+    },
+    "475": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        960,
+        1331
+      ],
+      "op": "POP",
+      "path": "6"
+    },
+    "476": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        960,
+        1331
+      ],
+      "op": "POP",
+      "path": "6"
+    },
+    "477": {
+      "fn": "TestGuestList.setGuests",
+      "jump": "o",
+      "offset": [
+        960,
+        1331
+      ],
+      "op": "JUMP",
+      "path": "6"
+    },
+    "478": {
+      "offset": [
+        386,
+        408
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "479": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        386,
+        408
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x1"
+    },
+    "481": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        386,
+        408
+      ],
+      "op": "SLOAD",
+      "path": "6"
+    },
+    "482": {
+      "op": "PUSH1",
+      "value": "0x1"
+    },
+    "484": {
+      "op": "PUSH1",
+      "value": "0x1"
+    },
+    "486": {
+      "op": "PUSH1",
+      "value": "0xA0"
+    },
+    "488": {
+      "op": "SHL"
+    },
+    "489": {
+      "op": "SUB"
+    },
+    "490": {
+      "offset": [
+        386,
+        408
+      ],
+      "op": "AND",
+      "path": "6"
+    },
+    "491": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        386,
+        408
+      ],
+      "op": "DUP2",
+      "path": "6"
+    },
+    "492": {
+      "fn": "TestGuestList.setGuests",
+      "jump": "o",
+      "offset": [
+        386,
+        408
+      ],
+      "op": "JUMP",
+      "path": "6"
+    },
+    "493": {
+      "offset": [
+        360,
+        380
+      ],
+      "op": "JUMPDEST",
+      "path": "6"
+    },
+    "494": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        360,
+        380
+      ],
+      "op": "PUSH1",
+      "path": "6",
+      "value": "0x0"
+    },
+    "496": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        360,
+        380
+      ],
+      "op": "SLOAD",
+      "path": "6"
+    },
+    "497": {
+      "op": "PUSH1",
+      "value": "0x1"
+    },
+    "499": {
+      "op": "PUSH1",
+      "value": "0x1"
+    },
+    "501": {
+      "op": "PUSH1",
+      "value": "0xA0"
+    },
+    "503": {
+      "op": "SHL"
+    },
+    "504": {
+      "op": "SUB"
+    },
+    "505": {
+      "offset": [
+        360,
+        380
+      ],
+      "op": "AND",
+      "path": "6"
+    },
+    "506": {
+      "fn": "TestGuestList.setGuests",
+      "offset": [
+        360,
+        380
+      ],
+      "op": "DUP2",
+      "path": "6"
+    },
+    "507": {
+      "fn": "TestGuestList.setGuests",
+      "jump": "o",
+      "offset": [
+        360,
+        380
+      ],
+      "op": "JUMP",
+      "path": "6"
+    },
+    "508": {
+      "op": "JUMPDEST"
+    },
+    "509": {
+      "op": "DUP1"
+    },
+    "510": {
+      "op": "CALLDATALOAD"
+    },
+    "511": {
+      "op": "PUSH1",
+      "value": "0x1"
+    },
+    "513": {
+      "op": "PUSH1",
+      "value": "0x1"
+    },
+    "515": {
+      "op": "PUSH1",
+      "value": "0xA0"
+    },
+    "517": {
+      "op": "SHL"
+    },
+    "518": {
+      "op": "SUB"
+    },
+    "519": {
+      "op": "DUP2"
+    },
+    "520": {
+      "op": "AND"
+    },
+    "521": {
+      "op": "DUP2"
+    },
+    "522": {
+      "op": "EQ"
+    },
+    "523": {
+      "op": "PUSH2",
+      "value": "0xFC"
+    },
+    "526": {
+      "op": "JUMPI"
+    },
+    "527": {
+      "op": "PUSH1",
+      "value": "0x0"
+    },
+    "529": {
+      "op": "DUP1"
+    },
+    "530": {
+      "op": "REVERT"
+    },
+    "531": {
+      "op": "JUMPDEST"
+    },
+    "532": {
+      "op": "PUSH1",
+      "value": "0x0"
+    },
+    "534": {
+      "op": "DUP1"
+    },
+    "535": {
+      "op": "DUP4"
+    },
+    "536": {
+      "op": "PUSH1",
+      "value": "0x1F"
+    },
+    "538": {
+      "op": "DUP5"
+    },
+    "539": {
+      "op": "ADD"
+    },
+    "540": {
+      "op": "SLT"
+    },
+    "541": {
+      "op": "PUSH2",
+      "value": "0x224"
+    },
+    "544": {
+      "op": "JUMPI"
+    },
+    "545": {
+      "op": "DUP2"
+    },
+    "546": {
+      "op": "DUP3"
+    },
+    "547": {
+      "op": "REVERT"
+    },
+    "548": {
+      "op": "JUMPDEST"
+    },
+    "549": {
+      "op": "POP"
+    },
+    "550": {
+      "op": "DUP2"
+    },
+    "551": {
+      "op": "CALLDATALOAD"
+    },
+    "552": {
+      "op": "PUSH8",
+      "value": "0xFFFFFFFFFFFFFFFF"
+    },
+    "561": {
+      "op": "DUP2"
+    },
+    "562": {
+      "op": "GT"
+    },
+    "563": {
+      "op": "ISZERO"
+    },
+    "564": {
+      "op": "PUSH2",
+      "value": "0x23B"
+    },
+    "567": {
+      "op": "JUMPI"
+    },
+    "568": {
+      "op": "DUP2"
+    },
+    "569": {
+      "op": "DUP3"
+    },
+    "570": {
+      "op": "REVERT"
+    },
+    "571": {
+      "op": "JUMPDEST"
+    },
+    "572": {
+      "op": "PUSH1",
+      "value": "0x20"
+    },
+    "574": {
+      "op": "DUP4"
+    },
+    "575": {
+      "op": "ADD"
+    },
+    "576": {
+      "op": "SWAP2"
+    },
+    "577": {
+      "op": "POP"
+    },
+    "578": {
+      "op": "DUP4"
+    },
+    "579": {
+      "op": "PUSH1",
+      "value": "0x20"
+    },
+    "581": {
+      "op": "DUP1"
+    },
+    "582": {
+      "op": "DUP4"
+    },
+    "583": {
+      "op": "MUL"
+    },
+    "584": {
+      "op": "DUP6"
+    },
+    "585": {
+      "op": "ADD"
+    },
+    "586": {
+      "op": "ADD"
+    },
+    "587": {
+      "op": "GT"
+    },
+    "588": {
+      "op": "ISZERO"
+    },
+    "589": {
+      "op": "PUSH2",
+      "value": "0x255"
+    },
+    "592": {
+      "op": "JUMPI"
+    },
+    "593": {
+      "op": "PUSH1",
+      "value": "0x0"
+    },
+    "595": {
+      "op": "DUP1"
+    },
+    "596": {
+      "op": "REVERT"
+    },
+    "597": {
+      "op": "JUMPDEST"
+    },
+    "598": {
+      "op": "SWAP3"
+    },
+    "599": {
+      "op": "POP"
+    },
+    "600": {
+      "op": "SWAP3"
+    },
+    "601": {
+      "op": "SWAP1"
+    },
+    "602": {
+      "op": "POP"
+    },
+    "603": {
+      "jump": "o",
+      "op": "JUMP"
+    },
+    "604": {
+      "op": "JUMPDEST"
+    },
+    "605": {
+      "op": "PUSH1",
+      "value": "0x0"
+    },
+    "607": {
+      "op": "PUSH1",
+      "value": "0x20"
+    },
+    "609": {
+      "op": "DUP3"
+    },
+    "610": {
+      "op": "DUP5"
+    },
+    "611": {
+      "op": "SUB"
+    },
+    "612": {
+      "op": "SLT"
+    },
+    "613": {
+      "op": "ISZERO"
+    },
+    "614": {
+      "op": "PUSH2",
+      "value": "0x26D"
+    },
+    "617": {
+      "op": "JUMPI"
+    },
+    "618": {
+      "op": "DUP1"
+    },
+    "619": {
+      "op": "DUP2"
+    },
+    "620": {
+      "op": "REVERT"
+    },
+    "621": {
+      "op": "JUMPDEST"
+    },
+    "622": {
+      "op": "PUSH2",
+      "value": "0x277"
+    },
+    "625": {
+      "op": "DUP4"
+    },
+    "626": {
+      "op": "DUP4"
+    },
+    "627": {
+      "op": "PUSH2",
+      "value": "0x1FC"
+    },
+    "630": {
+      "jump": "i",
+      "op": "JUMP"
+    },
+    "631": {
+      "op": "JUMPDEST"
+    },
+    "632": {
+      "op": "SWAP4"
+    },
+    "633": {
+      "op": "SWAP3"
+    },
+    "634": {
+      "op": "POP"
+    },
+    "635": {
+      "op": "POP"
+    },
+    "636": {
+      "op": "POP"
+    },
+    "637": {
+      "jump": "o",
+      "op": "JUMP"
+    },
+    "638": {
+      "op": "JUMPDEST"
+    },
+    "639": {
+      "op": "PUSH1",
+      "value": "0x0"
+    },
+    "641": {
+      "op": "DUP1"
+    },
+    "642": {
+      "op": "PUSH1",
+      "value": "0x40"
+    },
+    "644": {
+      "op": "DUP4"
+    },
+    "645": {
+      "op": "DUP6"
+    },
+    "646": {
+      "op": "SUB"
+    },
+    "647": {
+      "op": "SLT"
+    },
+    "648": {
+      "op": "ISZERO"
+    },
+    "649": {
+      "op": "PUSH2",
+      "value": "0x290"
+    },
+    "652": {
+      "op": "JUMPI"
+    },
+    "653": {
+      "op": "DUP1"
+    },
+    "654": {
+      "op": "DUP2"
+    },
+    "655": {
+      "op": "REVERT"
+    },
+    "656": {
+      "op": "JUMPDEST"
+    },
+    "657": {
+      "op": "PUSH2",
+      "value": "0x29A"
+    },
+    "660": {
+      "op": "DUP5"
+    },
+    "661": {
+      "op": "DUP5"
+    },
+    "662": {
+      "op": "PUSH2",
+      "value": "0x1FC"
+    },
+    "665": {
+      "jump": "i",
+      "op": "JUMP"
+    },
+    "666": {
+      "op": "JUMPDEST"
+    },
+    "667": {
+      "op": "SWAP5"
+    },
+    "668": {
+      "op": "PUSH1",
+      "value": "0x20"
+    },
+    "670": {
+      "op": "SWAP4"
+    },
+    "671": {
+      "op": "SWAP1"
+    },
+    "672": {
+      "op": "SWAP4"
+    },
+    "673": {
+      "op": "ADD"
+    },
+    "674": {
+      "op": "CALLDATALOAD"
+    },
+    "675": {
+      "op": "SWAP4"
+    },
+    "676": {
+      "op": "POP"
+    },
+    "677": {
+      "op": "POP"
+    },
+    "678": {
+      "op": "POP"
+    },
+    "679": {
+      "jump": "o",
+      "op": "JUMP"
+    },
+    "680": {
+      "op": "JUMPDEST"
+    },
+    "681": {
+      "op": "PUSH1",
+      "value": "0x0"
+    },
+    "683": {
+      "op": "DUP1"
+    },
+    "684": {
+      "op": "PUSH1",
+      "value": "0x0"
+    },
+    "686": {
+      "op": "DUP1"
+    },
+    "687": {
+      "op": "PUSH1",
+      "value": "0x40"
+    },
+    "689": {
+      "op": "DUP6"
+    },
+    "690": {
+      "op": "DUP8"
+    },
+    "691": {
+      "op": "SUB"
+    },
+    "692": {
+      "op": "SLT"
+    },
+    "693": {
+      "op": "ISZERO"
+    },
+    "694": {
+      "op": "PUSH2",
+      "value": "0x2BD"
+    },
+    "697": {
+      "op": "JUMPI"
+    },
+    "698": {
+      "op": "DUP2"
+    },
+    "699": {
+      "op": "DUP3"
+    },
+    "700": {
+      "op": "REVERT"
+    },
+    "701": {
+      "op": "JUMPDEST"
+    },
+    "702": {
+      "op": "DUP5"
+    },
+    "703": {
+      "op": "CALLDATALOAD"
+    },
+    "704": {
+      "op": "PUSH8",
+      "value": "0xFFFFFFFFFFFFFFFF"
+    },
+    "713": {
+      "op": "DUP1"
+    },
+    "714": {
+      "op": "DUP3"
+    },
+    "715": {
+      "op": "GT"
+    },
+    "716": {
+      "op": "ISZERO"
+    },
+    "717": {
+      "op": "PUSH2",
+      "value": "0x2D4"
+    },
+    "720": {
+      "op": "JUMPI"
+    },
+    "721": {
+      "op": "DUP4"
+    },
+    "722": {
+      "op": "DUP5"
+    },
+    "723": {
+      "op": "REVERT"
+    },
+    "724": {
+      "op": "JUMPDEST"
+    },
+    "725": {
+      "op": "PUSH2",
+      "value": "0x2E0"
+    },
+    "728": {
+      "op": "DUP9"
+    },
+    "729": {
+      "op": "DUP4"
+    },
+    "730": {
+      "op": "DUP10"
+    },
+    "731": {
+      "op": "ADD"
+    },
+    "732": {
+      "op": "PUSH2",
+      "value": "0x213"
+    },
+    "735": {
+      "jump": "i",
+      "op": "JUMP"
+    },
+    "736": {
+      "op": "JUMPDEST"
+    },
+    "737": {
+      "op": "SWAP1"
+    },
+    "738": {
+      "op": "SWAP7"
+    },
+    "739": {
+      "op": "POP"
+    },
+    "740": {
+      "op": "SWAP5"
+    },
+    "741": {
+      "op": "POP"
+    },
+    "742": {
+      "op": "PUSH1",
+      "value": "0x20"
+    },
+    "744": {
+      "op": "DUP8"
+    },
+    "745": {
+      "op": "ADD"
+    },
+    "746": {
+      "op": "CALLDATALOAD"
+    },
+    "747": {
+      "op": "SWAP2"
+    },
+    "748": {
+      "op": "POP"
+    },
+    "749": {
+      "op": "DUP1"
+    },
+    "750": {
+      "op": "DUP3"
+    },
+    "751": {
+      "op": "GT"
+    },
+    "752": {
+      "op": "ISZERO"
+    },
+    "753": {
+      "op": "PUSH2",
+      "value": "0x2F8"
+    },
+    "756": {
+      "op": "JUMPI"
+    },
+    "757": {
+      "op": "DUP4"
+    },
+    "758": {
+      "op": "DUP5"
+    },
+    "759": {
+      "op": "REVERT"
+    },
+    "760": {
+      "op": "JUMPDEST"
+    },
+    "761": {
+      "op": "POP"
+    },
+    "762": {
+      "op": "PUSH2",
+      "value": "0x305"
+    },
+    "765": {
+      "op": "DUP8"
+    },
+    "766": {
+      "op": "DUP3"
+    },
+    "767": {
+      "op": "DUP9"
+    },
+    "768": {
+      "op": "ADD"
+    },
+    "769": {
+      "op": "PUSH2",
+      "value": "0x213"
+    },
+    "772": {
+      "jump": "i",
+      "op": "JUMP"
+    },
+    "773": {
+      "op": "JUMPDEST"
+    },
+    "774": {
+      "op": "SWAP6"
+    },
+    "775": {
+      "op": "SWAP9"
+    },
+    "776": {
+      "op": "SWAP5"
+    },
+    "777": {
+      "op": "SWAP8"
+    },
+    "778": {
+      "op": "POP"
+    },
+    "779": {
+      "op": "SWAP6"
+    },
+    "780": {
+      "op": "POP"
+    },
+    "781": {
+      "op": "POP"
+    },
+    "782": {
+      "op": "POP"
+    },
+    "783": {
+      "op": "POP"
+    },
+    "784": {
+      "jump": "o",
+      "op": "JUMP"
+    },
+    "785": {
+      "op": "JUMPDEST"
+    },
+    "786": {
+      "op": "PUSH1",
+      "value": "0x0"
+    },
+    "788": {
+      "op": "PUSH1",
+      "value": "0x20"
+    },
+    "790": {
+      "op": "DUP3"
+    },
+    "791": {
+      "op": "DUP5"
+    },
+    "792": {
+      "op": "SUB"
+    },
+    "793": {
+      "op": "SLT"
+    },
+    "794": {
+      "op": "ISZERO"
+    },
+    "795": {
+      "op": "PUSH2",
+      "value": "0x322"
+    },
+    "798": {
+      "op": "JUMPI"
+    },
+    "799": {
+      "op": "DUP1"
+    },
+    "800": {
+      "op": "DUP2"
+    },
+    "801": {
+      "op": "REVERT"
+    },
+    "802": {
+      "op": "JUMPDEST"
+    },
+    "803": {
+      "op": "DUP2"
+    },
+    "804": {
+      "op": "CALLDATALOAD"
+    },
+    "805": {
+      "op": "DUP1"
+    },
+    "806": {
+      "op": "ISZERO"
+    },
+    "807": {
+      "op": "ISZERO"
+    },
+    "808": {
+      "op": "DUP2"
+    },
+    "809": {
+      "op": "EQ"
+    },
+    "810": {
+      "op": "PUSH2",
+      "value": "0x277"
+    },
+    "813": {
+      "op": "JUMPI"
+    },
+    "814": {
+      "op": "DUP2"
+    },
+    "815": {
+      "op": "DUP3"
+    },
+    "816": {
+      "op": "REVERT"
+    },
+    "817": {
+      "op": "JUMPDEST"
+    },
+    "818": {
+      "op": "PUSH1",
+      "value": "0x1"
+    },
+    "820": {
+      "op": "PUSH1",
+      "value": "0x1"
+    },
+    "822": {
+      "op": "PUSH1",
+      "value": "0xA0"
+    },
+    "824": {
+      "op": "SHL"
+    },
+    "825": {
+      "op": "SUB"
+    },
+    "826": {
+      "op": "SWAP2"
+    },
+    "827": {
+      "op": "SWAP1"
+    },
+    "828": {
+      "op": "SWAP2"
+    },
+    "829": {
+      "op": "AND"
+    },
+    "830": {
+      "op": "DUP2"
+    },
+    "831": {
+      "op": "MSTORE"
+    },
+    "832": {
+      "op": "PUSH1",
+      "value": "0x20"
+    },
+    "834": {
+      "op": "ADD"
+    },
+    "835": {
+      "op": "SWAP1"
+    },
+    "836": {
+      "jump": "o",
+      "op": "JUMP"
+    },
+    "837": {
+      "op": "JUMPDEST"
+    },
+    "838": {
+      "op": "SWAP1"
+    },
+    "839": {
+      "op": "ISZERO"
+    },
+    "840": {
+      "op": "ISZERO"
+    },
+    "841": {
+      "op": "DUP2"
+    },
+    "842": {
+      "op": "MSTORE"
+    },
+    "843": {
+      "op": "PUSH1",
+      "value": "0x20"
+    },
+    "845": {
+      "op": "ADD"
+    },
+    "846": {
+      "op": "SWAP1"
+    },
+    "847": {
+      "jump": "o",
+      "op": "JUMP"
+    }
+  },
+  "sha1": "5e9a0415c6e745960c1b4f10a8d68e8a9d5880e8",
+  "source": "// SPDX-License-Identifier: GPL-3.0\npragma solidity >=0.6.0 <0.7.0;\npragma experimental ABIEncoderV2;\n\n/**\n * @notice A basic guest list contract for testing.\n * @dev For a Vyper implementation of this contract containing additional\n * functionality, see https://github.com/banteg/guest-list/blob/master/contracts/GuestList.vy\n */\ncontract TestGuestList {\n    address public vault;\n    address public bouncer;\n    mapping(address => bool) public guests;\n\n    /**\n     * @notice Create the test guest list, setting the message sender as\n     * `bouncer`.\n     * @dev Note that since this is just for testing, you're unable to change\n     * `bouncer`.\n     */\n    constructor() public {\n        bouncer = msg.sender;\n    }\n\n    /**\n     * @notice Invite guests or kick them from the party.\n     * @param _guests The guests to add or update.\n     * @param _invited A flag for each guest at the matching index, inviting or\n     * uninviting the guest.\n     */\n    function setGuests(address[] calldata _guests, bool[] calldata _invited) external {\n        assert(msg.sender == bouncer);\n        assert(_guests.length == _invited.length);\n        for (uint256 i = 0; i < _guests.length; i++) {\n            if (_guests[i] == address(0)) {\n                break;\n            }\n            guests[_guests[i]] = _invited[i];\n        }\n    }\n\n    /**\n     * @notice Check if a guest with a bag of a certain size is allowed into\n     * the party.\n     * @dev Note that `_amount` isn't checked to keep test setup simple, since\n     * from the vault tests' perspective this is a pass/fail call anyway.\n     * @param _guest The guest's address to check.\n     * @param _amount Not used. The amount of tokens the guest is bringing.\n     */\n    function authorized(address _guest, uint256 _amount) external view returns (bool) {\n        return guests[_guest];\n    }\n}\n",
+  "sourceMap": "331:1519:6:-:0;;;662:58;;;;;;;;;-1:-1:-1;693:7:6;:20;;-1:-1:-1;;;;;;693:20:6;703:10;693:20;;;331:1519;;;;;;",
+  "sourcePath": "contracts/test/TestGuestList.sol",
+  "type": "contract"
+}
