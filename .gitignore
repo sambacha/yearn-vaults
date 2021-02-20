@@ -4,4 +4,8 @@ __pycache__
 build/
 reports/
 node_modules/
+<<<<<<< HEAD
 .test_durations
+=======
+.DS_Store
+>>>>>>> 1eeca92... feat(npm): npm packaging
